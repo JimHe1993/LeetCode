@@ -1,0 +1,35 @@
+class Solution:
+    def removeElement(self, nums, val):
+        """
+        :type nums: List[int]
+        :type val: int
+        :rtype: int
+        """
+        if not nums:
+            return 0
+        # 解法一：不稳定 [0...i) != val, (j...len(nums)-1] == val, 当i==j时，已经得到正确解
+        # i = 0
+        # j = len(nums) - 1
+        # while i <= j:
+        #     while i <= j and nums[i] != val:
+        #         i += 1
+        #     while i <= j and nums[j] == val:
+        #         j -= 1
+        #     if i >= j:
+        #         break
+        #     nums[i], nums[j] = nums[j], nums[i]
+        #     i += 1
+        #     j -= 1
+        # return i
+        
+        # 解法二：非值元素相对位置稳定，[0...i) != val, [i...j) == val
+        i = 0
+        j = 0
+        while j < len(nums):
+            if nums[j] != val:
+                if i != j:
+                    nums[i], nums[j] = nums[j], nums[i]
+                i += 1
+            j += 1
+        return i
+        
