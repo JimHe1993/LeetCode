@@ -1,0 +1,26 @@
+class Solution:
+    def removeDuplicates(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        if not nums:
+            return 0
+        # [0...i] 前部分，(i...j)前部分中某些元素的重复
+        i = 0
+        j = 1
+        count = 1  # 当列表不为空时初始计数1
+        while j < len(nums):
+            if nums[j] == nums[i]:
+                if count < 2:
+                    i += 1
+                    count += 1
+                else:
+                    del nums[j]
+                    j -= 1
+            else:
+                count = 1
+                i += 1
+                nums[i], nums[j] = nums[j], nums[i]
+            j += 1
+        return i + 1
