@@ -1,0 +1,76 @@
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+class Solution:
+    '''
+    归并排序思想
+    '''
+    def mergeKLists(self, lists):
+        """
+        :type lists: List[ListNode]
+        :rtype: ListNode
+        """
+        if not lists:
+            return None
+        return self.__merge_k_lists(lists, 0, len(lists)-1)
+    
+    def __merge_k_lists(self, lists, left, right):
+        if left >= right:
+            # pp = lists[left]
+            # while pp:
+            #     print(pp.val, '->', end='')
+            #     pp = pp.next
+            # print()
+            return lists[left]
+        
+        mid = left + (right - left) // 2
+        
+        left_node = self.__merge_k_lists(lists, left, mid)
+        right_node = self.__merge_k_lists(lists, mid+1, right)
+        return self.__merge_2_list(left_node, right_node)
+    
+    # def __merge_2_list(self, left_head, right_head):
+    #     '''
+    #     用于列表测试用例
+    #     '''
+    #     res = []
+    #     i = j = 0
+    #     while i < len(left_head) and j < len(right_head):
+    #         if left_head[i] <= right_head[j]:
+    #             res.append(left_head[i])
+    #             i += 1
+    #         else:
+    #             res.append(right_head[j])
+    #             j += 1
+    #     while i < len(left_head):
+    #         res.append(left_head[i])
+    #         i += 1
+    #     while j < len(right_head):
+    #         res.append(right_head[j])
+    #         j += 1
+    #     return res
+    
+    def __merge_2_list(self, left_head, right_head):
+        dummy_head = ListNode(-1)
+        p = dummy_head
+        while left_head and right_head:
+            if left_head.val <= right_head.val:
+                p.next = left_head
+                left_head = left_head.next
+                p = p.next
+            else:
+                p.next = right_head
+                right_head = right_head.next
+                p = p.next
+        while left_head:
+            p.next = left_head
+            left_head = left_head.next
+            p = p.next
+        while right_head:
+            p.next = right_head
+            right_head = right_head.next
+            p = p.next
+        return dummy_head.next
