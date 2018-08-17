@@ -1,0 +1,29 @@
+class Solution:
+    def minSubArrayLen(self, s, nums):
+        """
+        :type s: int
+        :type nums: List[int]
+        :rtype: int
+        """
+        # 维护一个滑动窗口[i ... j]，使得窗口中的元素和肯定是>=s的，在满足要求下找连续子数组的最小长度
+        if not nums:
+            return 0
+        i = 0
+        j = -1
+        res = len(nums) + 1
+        sum_s = 0
+        # while j<len(nums):
+        while i<len(nums): # 滑动窗口[i ... j], i能取值，j也就能取值，大不了j == i
+            if j+1 < len(nums) and sum_s < s:
+                sum_s += nums[j+1]
+                j += 1
+            else:
+                sum_s -= nums[i]
+                i += 1
+            # 每次窗口变动后进行另一条件的判断（当sum_s >= s时，是否满足更小的连续数组长度）
+            if sum_s >= s:
+                res = min(res, j-i+1)
+        if res == len(nums) + 1:
+            return 0
+        return res
+                
