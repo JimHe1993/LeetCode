@@ -1,0 +1,23 @@
+class Solution:
+    def lengthOfLongestSubstring(self, s):
+        """
+        :type s: str
+        :rtype: int
+        """
+        if not s:
+            return 0
+        # 维护一个滑动窗口[i ... j]，使得其间没有重复字符，然后探索j+1位置，若j+1位置的字符与窗口中的某一个字符重复，则更新无重复的窗口
+        freq = [0]*256
+        i = 0
+        j = -1
+        len_subStr = 0
+        while i < len(s):
+            if j+1 < len(s) and freq[ord(s[j+1])] == 0:
+                j += 1
+                freq[ord(s[j])] += 1
+            else:
+                freq[ord(s[i])] -= 1
+                i += 1
+            len_subStr = max(len_subStr, j-i+1)
+        return len_subStr
+        
