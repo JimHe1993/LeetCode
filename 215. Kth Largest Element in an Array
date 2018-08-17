@@ -1,0 +1,40 @@
+import random
+class Solution:
+    def findKthLargest(self, nums, k):
+        """
+        :type nums: List[int]
+        :type k: int
+        :rtype: int
+        """
+        if not nums:
+            return -1
+        # 快速排序partition过程确定一个元素的最终位置
+        return self.__quick_sort(nums, k, 0, len(nums)-1)
+    
+    def __quick_sort(self, nums, k, left, right):
+        if left > right:
+            return -1
+        # partition过程
+        fixed_idx = self.__partition(nums, left, right)
+        if fixed_idx == len(nums) - k:
+            return nums[len(nums) - k]
+        elif fixed_idx < len(nums) - k:
+            return self.__quick_sort(nums, k, fixed_idx+1, right)
+        else:
+            return self.__quick_sort(nums, k, left, fixed_idx-1)
+    
+    def __partition(self, nums, left, right):
+        random.seed(0)
+        random_idx = random.randint(left, right)
+        nums[left], nums[random_idx] = nums[random_idx], nums[left]
+        label_e = nums[left]
+        # [left+1 ... i] < label_e, [i+1 ... j] >= label_e
+        i = left
+        j = left + 1
+        while j <= right:
+            if nums[j] < label_e:
+                nums[i+1], nums[j] = nums[j], nums[i+1]
+                i += 1
+            j += 1
+        nums[left], nums[i] = nums[i], nums[left]
+        return i
