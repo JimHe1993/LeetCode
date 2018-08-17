@@ -1,0 +1,46 @@
+class Solution:
+    def findAnagrams(self, s, p):
+        """
+        :type s: str
+        :type p: str
+        :rtype: List[int]
+        """        
+        res = []
+        if not s or not p:
+            return res
+        dict_p = {}
+        for pp in p:  # 目标字符串统计
+            if pp not in dict_p:
+                dict_p[pp] = 1
+            else:
+                dict_p[pp] += 1
+        i = 0
+        j = len(p) - 1
+        flag = False
+        while j < len(s):
+            sub_s = s[i:j+1]  # 截取子串
+            dict_p_copy = dict_p.copy()
+            if flag:  # 上一次成功判断，则本次只需判断新加入的字符是否符合要求
+                if s[i-1] == s[j]:
+                    dict_p_copy.clear()  # 符合要求则添加
+            else:
+                for ss in sub_s:
+                    if ss in dict_p_copy:
+                        if dict_p_copy[ss] > 0:
+                            dict_p_copy[ss] -= 1
+                        if dict_p_copy[ss] == 0:
+                            del dict_p_copy[ss]
+                    else:  # 中间有异常字符，直接跳过从异常字符后面开始判断
+                        idx_e = sub_s.find(ss)
+                        i += idx_e + 1
+                        j += idx_e + 1
+                        break
+            if not dict_p_copy:
+                res.append(i)
+                i += 1
+                j += 1
+                flag = True
+            else:
+                flag = False
+        return res
+            
