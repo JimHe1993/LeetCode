@@ -1,0 +1,28 @@
+class Solution:
+    def search(self, nums, target):
+        """
+        :type nums: List[int]
+        :type target: int
+        :rtype: int
+        """
+        if not nums:
+            return -1
+        
+        front = 0
+        end = len(nums)-1
+        while front <= end:
+            m = (end + front)//2
+            if target == nums[m]:
+                return m
+            if nums[front] <= nums[m]:
+                if target < nums[m] and target >= nums[front]:
+                    end = m-1
+                else:
+                    front = m+1
+            else:
+                if target <= nums[end] and target > nums[m]:
+                    front = m+1
+                else:
+                    end = m-1
+        return -1
+                
