@@ -1,0 +1,26 @@
+class Solution:
+    def reverseVowels(self, s):
+        """
+        :type s: str
+        :rtype: str
+        """
+        if not s:
+            return s
+        len_s = len(s)
+        s_list = list(s)
+        bins = ['a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U']
+        i = 0
+        j = len_s - 1
+        while i < j:
+            # while i < len_s and bins.count(s[i]) == 0:
+            while i < len_s and s[i] not in bins:
+                i += 1
+            # while j >= 0 and bins.count(s[j]) == 0:
+            while i < len_s and s[j] not in bins:
+                j -= 1
+            if i > j:
+                break
+            s_list[i], s_list[j] = s_list[j], s_list[i]
+            i += 1
+            j -= 1
+        return ''.join(s_list)
