@@ -7,17 +7,34 @@ class Solution:
         if not s:
             return 0
         # 维护一个滑动窗口[i ... j]，使得其间没有重复字符，然后探索j+1位置，若j+1位置的字符与窗口中的某一个字符重复，则更新无重复的窗口
-        freq = [0]*256
+        # freq = [0]*256
+        # i = 0
+        # j = -1
+        # len_subStr = 0
+        # while i < len(s):
+        #     if j+1 < len(s) and freq[ord(s[j+1])] == 0:
+        #         j += 1
+        #         freq[ord(s[j])] += 1
+        #     else:
+        #         freq[ord(s[i])] -= 1
+        #         i += 1
+        #     len_subStr = max(len_subStr, j-i+1)
+        # return len_subStr
+        
+        # 维护一个[i ... j)的窗口，保证其内没有重复的字符
         i = 0
-        j = -1
-        len_subStr = 0
-        while i < len(s):
-            if j+1 < len(s) and freq[ord(s[j+1])] == 0:
-                j += 1
-                freq[ord(s[j])] += 1
+        j = 0
+        sub_s = ''
+        lenn = 0
+        while j < len(s):  # 当遍历完整个字符串，说明已经探索了所有相对最长的连续子串
+            if s[j] not in sub_s:
+                sub_s += s[j]
             else:
-                freq[ord(s[i])] -= 1
-                i += 1
-            len_subStr = max(len_subStr, j-i+1)
-        return len_subStr
+                idx_i = sub_s.find(s[j])
+                sub_s = sub_s[idx_i+1:]
+                sub_s += s[j]
+                i = idx_i + 1
+            lenn = max(lenn, len(sub_s))
+            j += 1
+        return lenn
         
