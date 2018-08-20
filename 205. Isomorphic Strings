@@ -1,0 +1,29 @@
+class Solution:
+    def isIsomorphic(self, s, t):
+        """
+        :type s: str
+        :type t: str
+        :rtype: bool
+        """
+        if not s and not t:
+            return True
+        if not s and t:
+            return False
+        if s and not t:
+            return False
+        if len(s) != len(t):
+            return False
+        
+        dict_s_t = {}
+        dict_t_s = {}
+        
+        for idx, ss in enumerate(s):
+            if ss not in dict_s_t:
+                if t[idx] in dict_t_s:
+                    return False
+                dict_s_t[ss] = t[idx]
+                dict_t_s[t[idx]] = ss
+            else:
+                if dict_s_t[ss] != t[idx]:
+                    return False
+        return True
