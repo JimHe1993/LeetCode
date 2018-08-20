@@ -1,0 +1,51 @@
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def countNodes(self, root):
+        """
+        :type root: TreeNode
+        :rtype: int
+        """
+        # 超时
+        # if not root:
+            # return 0
+        # h = 1
+        # queue = [[root]]
+        # while queue:
+            # layer_node = queue.pop(0)
+            # temp_queue = []
+            # for node in layer_node:
+                # if node.left:
+                    # temp_queue.append(node.left)
+                # if node.right:
+                    # temp_queue.append(node.right)
+            # if 2**h == len(temp_queue):
+                # h += 1
+                # queue.append(temp_queue)
+            # else:
+                # return 2**h - 1 + len(temp_queue)
+        
+        if not root:
+            return 0
+        
+        left_left = self.left_height(root.left)
+        left_right = self.right_height(root.left)
+        if left_left == left_right:
+            return 1 + (2 ** left_left - 1) + self.countNodes(root.right)
+        assert left_left == left_right + 1, '非完全二叉树'
+        return 1 + (2 ** left_right - 1) + self.countNodes(root.left)
+    
+    def left_height(self, node):
+        if not node:
+            return 0
+        return 1 + self.left_height(node.left)
+    
+    def right_height(self, node):
+        if not node:
+            return 0
+        return 1 + self.right_height(node.right)
