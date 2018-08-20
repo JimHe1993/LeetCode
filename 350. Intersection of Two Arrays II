@@ -1,0 +1,22 @@
+class Solution:
+    def intersect(self, nums1, nums2):
+        """
+        :type nums1: List[int]
+        :type nums2: List[int]
+        :rtype: List[int]
+        """
+        if not nums1 or not nums2:
+            return []
+        dict_nums1 = {}
+        for num in nums1:
+            if num not in dict_nums1:
+                dict_nums1[num] = 1
+            else:
+                dict_nums1[num] += 1
+        res = []
+        for num in nums2:
+            if num in dict_nums1:
+                if dict_nums1[num] > 0:
+                    res.append(num)
+                    dict_nums1[num] -= 1
+        return res
