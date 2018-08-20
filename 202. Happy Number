@@ -1,0 +1,21 @@
+class Solution:
+    def isHappy(self, n):
+        """
+        :type n: int
+        :rtype: bool
+        """
+        if n <= 0:
+            return False
+        set_n = set()
+        while True:
+            set_n.add(n)
+            sum_2 = 0
+            while n:
+                sum_2 += (n%10)**2
+                n = n // 10
+            if sum_2 == 1:
+                return True
+            if sum_2 in set_n:
+                return False
+            n = sum_2
+                
