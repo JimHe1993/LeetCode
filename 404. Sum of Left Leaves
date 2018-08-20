@@ -1,0 +1,29 @@
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def sumOfLeftLeaves(self, root):
+        """
+        :type root: TreeNode
+        :rtype: int
+        """
+        # 递归判断每个节点，是不是左节点+叶子节点
+        if not root:
+            return 0
+        
+        res = 0
+        
+        if root.left and self.is_leaf(root.left):
+            res += root.left.val
+        
+        res += self.sumOfLeftLeaves(root.left) + self.sumOfLeftLeaves(root.right)
+        
+        return res
+    
+    def is_leaf(self, node):
+        if not node.left and not node.right:
+            return True
