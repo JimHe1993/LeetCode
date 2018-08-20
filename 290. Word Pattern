@@ -1,0 +1,29 @@
+class Solution:
+    def wordPattern(self, pattern, str):
+        """
+        :type pattern: str
+        :type str: str
+        :rtype: bool
+        """
+        if not str and not pattern:
+            return True
+        if not str and pattern:
+            return False
+        if str and not pattern:
+            return False
+        
+        str_list = str.split(' ')
+        if len(pattern) != len(str_list):
+            return False
+        dict_p_str = {}  # 用于存放字符-单词对
+        dict_str_p = {}  # 用于存放单词-字符对
+        for idx, p in enumerate(pattern):  # 检查所有单词-字符与字符-单词能否一一对应
+            if p not in dict_p_str:
+                if str_list[idx] in dict_str_p:
+                    return False
+                dict_p_str[p] = str_list[idx]
+                dict_str_p[str_list[idx]] = p
+            else:
+                if str_list[idx] != dict_p_str[p]:
+                    return False
+        return True
