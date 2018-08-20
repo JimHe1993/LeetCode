@@ -1,0 +1,64 @@
+class Solution:
+    
+    class MaxHeap(object):
+        def __init__(self, a_dict):
+            self.data = []
+            self.size = 0
+            for item in a_dict.items():
+                self.data.append(item)
+                self.size += 1
+            for k in range((len(self.data)-2)//2, -1, -1):
+                self.shift_down(k)
+        
+        def shift_down(self, k):
+            target = self.data[k]
+            while 2*k+1 < self.size:
+                i = 2*k+1
+                if i+1<self.size and self.data[i][1] < self.data[i+1][1]:
+                    i = i+1
+                if target[1] >= self.data[i][1]:
+                    break
+                self.data[k] = self.data[i]
+                k = i
+            self.data[k] = target
+            
+        def get_max(self):
+            if self.size == 0:
+                return None
+            if self.size == 1:
+                last_max = self.data[0]
+                self.size = 0
+                self.data.clear()
+                return last_max
+            max_e = self.data[0]
+            self.data[0], self.data[self.size-1] = self.data[self.size-1], self.data[0]
+            self.size -= 1
+            del self.data[self.size]
+            self.shift_down(0)
+            return max_e
+    
+    def frequencySort(self, s):
+        """
+        :type s: str
+        :rtype: str
+        """
+        # 最大堆
+        if not s:
+            return ''
+        
+        dict_s = {}
+        for ss in s:
+            if ss in dict_s:
+                dict_s[ss] += 1
+            else:
+                dict_s[ss] = 1
+        max_heap = Solution.MaxHeap(dict_s)
+        res = ''
+        while True:
+            ee = max_heap.get_max()
+            if not ee:
+                break
+            for _ in range(ee[1]):
+                res += ee[0]
+        return res
+        
