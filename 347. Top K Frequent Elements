@@ -1,0 +1,98 @@
+class Solution:
+    #----------最小堆----------#
+    class MinHeap(object):
+        class Node(object):
+            def __init__(self, key=None, value=None):
+                self.key = key
+                self.value = value
+
+        def __init__(self):
+            self.__heap = []
+            self.__size = 0
+
+        def __str__(self):
+            s = ''
+            for node in self.__heap:
+                s += str(node.key) + ':' + str(node.value) + ', '
+            return s
+
+        def get_size(self):
+            return self.__size
+
+        def is_empty(self):
+            return self.__size == 0
+
+        def get_min(self):
+            assert self.__size > 0
+            return self.__heap[0].key, self.__heap[0].value
+
+        def add(self, key, value):
+            self.__heap.append(Solution.MinHeap.Node(key, value))
+            self.__shift_up(self.__size)
+            self.__size += 1
+
+        def __shift_up(self, k):
+            target_node = self.__heap[k]
+            while (k - 1) // 2 >= 0 and target_node.value < self.__heap[(k - 1) // 2].value:
+                self.__heap[k] = self.__heap[(k - 1) // 2]
+                k = (k - 1) // 2
+            self.__heap[k] = target_node
+
+        def extract_min(self):
+            assert self.__size > 0, '堆为空'
+            min_node = self.__heap[0]
+            self.__heap[0], self.__heap[self.__size - 1] = self.__heap[self.__size - 1], self.__heap[0]
+            self.__size -= 1
+            self.__shift_down(self.__size, 0)
+            self.__heap = self.__heap[:-1]
+            return min_node.key, min_node.value
+
+        def __shift_down(self, n, k):
+            target_node = self.__heap[k]
+            while 2*k+1 < n:
+                ii = 2*k+1
+                if ii + 1 < n and self.__heap[ii+1].value < self.__heap[ii].value:
+                    ii = ii+1
+                if target_node.value <= self.__heap[ii].value:
+                    break
+                self.__heap[k] = self.__heap[ii]
+                k = ii
+            self.__heap[k] = target_node
+        
+        def replace(self, key, val):
+            self.__heap[0] = Solution.MinHeap.Node(key, val)
+            self.__shift_down(self.__size, 0)
+    #----------最小堆----------#
+    
+    
+    def topKFrequent(self, nums, k):
+        """
+        :type nums: List[int]
+        :type k: int
+        :rtype: List[int]
+        """
+        if not nums:
+            return []
+        freq = {}
+        for num in nums:
+            if num in freq:
+                freq[num] += 1
+            else:
+                freq[num] = 1
+       
+        min_heap = Solution.MinHeap()
+        for _ in range(k):
+            node = freq.popitem()
+            min_heap.add(node[0], node[1])
+        while freq:
+            node = freq.popitem()
+            min_node = min_heap.get_min()
+            if node[1] > min_node[1]:
+                # min_heap.extract_min()
+                # min_heap.add(node[0], node[1])
+                min_heap.replace(node[0], node[1])
+        res = []
+        while not min_heap.is_empty():
+            res.append(min_heap.extract_min()[0])
+        return res[::-1]
+        
