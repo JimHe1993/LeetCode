@@ -1,0 +1,58 @@
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def pathSum(self, root, sum):
+        """
+        :type root: TreeNode
+        :type sum: int
+        :rtype: List[List[int]]
+        """
+        res = []
+        if not root:
+            return res
+        if not root.left and not root.right:
+            if root.val == sum:
+                res.append([root.val])
+            return res
+        left = self.pathSum(root.left, sum-root.val)
+        for l in left:
+            res.append([root.val] + l)
+        right = self.pathSum(root.right, sum-root.val)
+        for r in right:
+            res.append([root.val] + r)
+        return res
+
+# class Solution:
+#     def pathSum(self, root, sum):
+#         """
+#         :type root: TreeNode
+#         :type sum: int
+#         :rtype: List[List[int]]
+#         """
+#         res = []
+#         if not root:
+#             return res
+        
+#         path = []
+        
+#         self.__path(root, res, path, sum)
+#         return res
+    # 整个递归，path都会被改变，而不是回溯时回到当前层的状态
+#     def __path(self, node, res, path, summ):
+#         if not node.left and not node.right:
+#             su = node.val
+#             for pp in path:
+#                 su += pp
+#             if su == summ:
+#                 path.append(node.val)
+#                 res.append(path)
+#         path.append(node.val)
+#         if node.left:
+#             self.__path(node.left, res, path, summ)
+#         if node.right:
+#             self.__path(node.right, res, path, summ)
