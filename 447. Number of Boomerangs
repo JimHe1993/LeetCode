@@ -1,0 +1,31 @@
+class Solution:
+    def numberOfBoomerangs(self, points):
+        """
+        :type points: List[List[int]]
+        :rtype: int
+        """
+        res = 0
+        if not points:
+            return res
+        le = len(points)
+        i = 0
+        while i < le:
+            p = points[i]
+            assert p is not None
+            dict_p = {}
+            j = 0
+            while j < le:
+                if j != i:
+                    pp = points[j]
+                    assert pp is not None
+                    dis = (p[0] - pp[0]) ** 2 + (p[1] - pp[1]) ** 2
+                    if dis in dict_p:
+                        dict_p[dis] += 1
+                    else:
+                        dict_p[dis] = 1
+                j += 1
+            for key in dict_p.keys():
+                # if dict_p[key] >= 2:
+                res += dict_p[key] * (dict_p[key] - 1)
+            i += 1
+        return res
