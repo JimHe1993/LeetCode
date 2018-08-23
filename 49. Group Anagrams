@@ -15,7 +15,8 @@ class Solution:
             if new_str not in dict_str:
                 dict_str[new_str] = [strss]
             else:
-                dict_str[new_str] = dict_str[new_str] + [strss]
+                # dict_str[new_str] = dict_str[new_str] + [strss]
+                dict_str[new_str].append(strss)
         for key in dict_str.keys():
             res.append(dict_str[key])
         return res
