@@ -1,0 +1,22 @@
+class Solution:
+    def groupAnagrams(self, strs):
+        """
+        :type strs: List[str]
+        :rtype: List[List[str]]
+        """
+        res = []
+        if not strs:
+            return res
+        dict_str = {}
+        for strss in strs:
+            l_s = list(strss)
+            l_s.sort()
+            new_str = ''.join(l_s)
+            if new_str not in dict_str:
+                dict_str[new_str] = [strss]
+            else:
+                dict_str[new_str] = dict_str[new_str] + [strss]
+        for key in dict_str.keys():
+            res.append(dict_str[key])
+        return res
+                
