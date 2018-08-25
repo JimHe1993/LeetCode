@@ -1,0 +1,73 @@
+import sys
+
+'''
+今日头条笔试：2018.08.25
+第一题
+n个人，找认识人构成的朋友圈个数，类似于题目：https://leetcode-cn.com/problems/friend-circles/description/
+用并查集解题
+输入格式：0表示一行结尾，数字表示第i+1行的朋友
+10----总人数
+0----默认1号朋友自己一个圈子
+5 3 0----第2号朋友认识第5和3号朋友
+8 4 0
+9 0
+9 0
+3 0
+0
+7 9 0
+0
+9 7 0
+注意，解体时题目规定第几号朋友从1开始计数，需要转换
+貌似基于size的优化能通过全部的测试用例，当前实现通过50%的测试用例
+'''
+
+
+class UnionFind(object):
+    def __init__(self, n):
+        self.parent = [i for i in range(n)]
+        self.rank = [1] * n
+
+    def find(self, p):
+        assert 0 <= p < len(self.parent)
+        while p != self.parent[p]:
+            p = self.parent[p]
+        return p
+
+    def union(self, p, q):
+        p_root = self.find(p)
+        q_root = self.find(q)
+
+        if p_root == q_root:
+            return
+
+        if self.rank[p_root] < self.rank[q_root]:
+            self.parent[p_root] = q_root
+        elif self.rank[p_root] > self.rank[q_root]:
+            self.parent[q_root] = p_root
+        else:
+            self.parent[p_root] = q_root
+            self.rank[q_root] += 1
+
+
+if __name__ == "__main__":
+    n = int(sys.stdin.readline().strip())
+    # if n == 0:
+    #     print(0)
+    # if n == 1:
+    #     print(1)
+    uf = UnionFind(n)
+    for i in range(n):
+        # 读取每一行
+        line = sys.stdin.readline().strip()
+        # 把每一行的数字分隔后转化成int列表
+        values = list(map(int, line.split()))
+        if i == 0:
+            continue
+        for v in values:
+            if v != 0:
+                uf.union(i, v - 1)  # 题目规定第几号朋友从1开始计数，需要-1
+    m = 0
+    for idx, e in enumerate(uf.parent):
+        if idx == e:
+            m += 1
+    print(m)
