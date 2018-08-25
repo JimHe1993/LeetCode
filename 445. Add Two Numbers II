@@ -1,0 +1,76 @@
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+class Solution:
+    def addTwoNumbers(self, l1, l2):
+        """
+        :type l1: ListNode
+        :type l2: ListNode
+        :rtype: ListNode
+        """
+        # 使用栈存储数字
+        stack_res = []
+        stack_l1 = []
+        stack_l2 = []
+        while l1:
+            stack_l1.append(l1.val)
+            l1 = l1.next
+        while l2:
+            stack_l2.append(l2.val)
+            l2 = l2.next
+        
+        carry = False  # 是否有进位
+        while stack_l1 and stack_l2:
+            num1 = stack_l1.pop()
+            num2 = stack_l2.pop()
+            if carry:
+                summ = num1 + num2 + 1
+                if summ >= 10:
+                    stack_res.append(summ - 10)
+                    carry = True
+                else:
+                    stack_res.append(summ)
+                    carry = False
+            else:
+                summ = num1 + num2
+                if summ >= 10:
+                    stack_res.append(summ - 10)
+                    carry = True
+                else:
+                    stack_res.append(summ)
+                    carry = False
+        while stack_l1:
+            if carry:
+                num = stack_l1.pop()
+                summ = num + 1
+                if summ >= 10:
+                    stack_res.append(summ - 10)
+                    carry = True
+                else:
+                    stack_res.append(summ)
+                    carry = False
+            else:
+                stack_res.append(stack_l1.pop())
+        while stack_l2:
+            if carry:
+                num = stack_l2.pop()
+                summ = num + 1
+                if summ >= 10:
+                    stack_res.append(summ - 10)
+                    carry = True
+                else:
+                    stack_res.append(summ)
+                    carry = False
+            else:
+                stack_res.append(stack_l2.pop())
+        if carry:
+            stack_res.append(1)
+        dummy = ListNode(-1)
+        pre = dummy
+        while stack_res:
+            pre.next = ListNode(stack_res.pop())
+            pre = pre.next
+        return dummy.next
