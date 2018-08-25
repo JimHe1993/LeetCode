@@ -10,6 +10,7 @@ class Solution:
         :type head: ListNode
         :rtype: ListNode
         """
+        # 只改变当前指针前面的元素位置，并且不会改变结点个数，所以可以循环迭代下去而不用考虑编号出错
         if not head:
             return
         pre = head
