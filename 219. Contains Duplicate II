@@ -1,0 +1,28 @@
+class Solution:
+    def containsNearbyDuplicate(self, nums, k):
+        """
+        :type nums: List[int]
+        :type k: int
+        :rtype: bool
+        """
+        # 维护一个滑动窗口[i ... j]，使得j-i+1 <= k，并且窗口内元素不重复
+        # 探寻j+1处的元素，若该处元素与窗口中元素相等，则返回True
+        # 否则，若j-i+1 < k，j += 1；若j-i+1 == k，j += 1， i += 1
+        # 窗口内的元素使用查找表来存储(set集合底层就是哈希表实现)
+        if not nums or k == 0:
+            return False
+        i = 0
+        j = -1
+        table = set()
+        while j < len(nums)-1:
+            if nums[j + 1] not in table:
+                if j - i + 1 == k:
+                    j += 1
+                    i += 1
+                    table.discard(nums[i-1])
+                elif j - i + 1 < k:
+                    j += 1
+                table.add(nums[j])
+            else:
+                return True
+        return False
