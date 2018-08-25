@@ -1,0 +1,59 @@
+import sys
+
+'''
+今日头条笔试：2018.08.25
+第四题
+给定t个序列，每个序列有n个元素，求可以找出的升序序列长度最大值
+输入：n 4, t 3
+序列：[10 3 7 5]
+则构成的全序列为 [10 3 7 5]-[10 3 7 5]-[10 3 7 5]
+输入格式：
+4 3
+10 3 7 5
+因为是重复序列，所以对一个序列[10 3 7 5]使用滑动窗口求出最长升序序列并记录当前升序序列最大值的索引，以便再剩余
+未探寻的序列中找大的值构成新的升序序列
+该测试用例输出：[3 7 10 10]，长度为4
+'''
+
+if __name__ == "__main__":
+    # 读取第一行
+    line = sys.stdin.readline().strip()
+    # 把第一行的数字分隔后转化成int列表
+    values = list(map(int, line.split()))
+
+    n = values[0]
+    t = values[1]
+
+    # 读取第二行
+    line = sys.stdin.readline().strip()
+    # 把第二行的数字分隔后转化成int列表
+    values = list(map(int, line.split()))
+
+    # 滑动窗口 [i ... j) 升序
+    max_le = 1
+    mu_idx = 0
+    le = 1
+    i = 0
+    j = 1
+    while j < len(values):
+        if values[j] >= values[j - 1]:
+            j += 1
+            le += 1
+            if max_le < le:
+                max_le = le
+                mu_idx = j - 1
+        else:
+            i = j
+            j += 1
+            le = 1
+    target = values[mu_idx]
+    # print(mu_idx)
+    # print(max_le)
+    for _ in range(t - 1):
+        m = 0
+        for v in values:
+            if v >= target:
+                target = v
+                m += 1
+        max_le += m
+    print(max_le)
