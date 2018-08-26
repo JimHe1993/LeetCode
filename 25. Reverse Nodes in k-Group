@@ -40,6 +40,6 @@ class Solution:
             
             pre = last
             last = pre.next
-            front = 0
+            front = None
         return dummy_head.next
             
