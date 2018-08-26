@@ -1,0 +1,30 @@
+class Solution:
+    def simplifyPath(self, path):
+        """
+        :type path: str
+        :rtype: str
+        """
+        # 先将各级文件名存起来，最后再连接成路径。遇到‘.’跳过，遇到‘..’删除上一级目录（不为空时）
+        file_name = []
+        i = 0
+        while i < len(path):
+            while i < len(path) and path[i] == '/':
+                i += 1
+            if i == len(path):
+                break
+            start = i
+            while i < len(path) and path[i] != '/':
+                i += 1
+            name = path[start : i]
+            if name == "..":
+                if file_name:
+                    file_name.pop()
+            elif name != '.':
+                file_name.append(name)
+        res = '/'
+        for idx, e in enumerate(file_name):
+            if idx == len(file_name) - 1:
+                res = res + e
+                break
+            res = res + e + '/'
+        return res
