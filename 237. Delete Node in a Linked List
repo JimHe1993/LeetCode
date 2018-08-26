@@ -10,9 +10,16 @@ class Solution:
         :type node: ListNode
         :rtype: void Do not return anything, modify node in-place instead.
         """
-        while node.next:  # 无法获得被删除结点的前驱，只能移动元素值
+        # while node.next:  # 无法获得被删除结点的前驱，只能移动元素值
+        #     node.val = node.next.val
+        #     if not node.next.next:
+        #         node.next = None
+        #         break
+        #     node = node.next
+        
+        # 先将node的下一个结点的值赋值给node，然后删除node的下一个结点
+        if node.next:
             node.val = node.next.val
-            if not node.next.next:
-                node.next = None
-                break
-            node = node.next
+            node.next = node.next.next
+        else:
+            node = None
