@@ -1,0 +1,29 @@
+class Solution:
+    def evalRPN(self, tokens):
+        """
+        :type tokens: List[str]
+        :rtype: int
+        """
+        res = []
+        op_set = set(['+', '-', '*', '/'])
+        for obj in tokens:
+            if obj in op_set:
+                num1 = res.pop()
+                num2 = res.pop()
+                ret = None
+                if obj == '+':
+                    ret = num2 + num1
+                elif obj == '-':
+                    ret = num2 - num1
+                elif obj == '*':
+                    ret = num2 * num1
+                else:
+                    # ret = num2 // num1  # 注意，整数除法会向下取整
+                    # if num2 < 0 or num1 < 0:
+                    #     if num1 * ret != num2:
+                    #         ret += 1
+                    ret = int(num2 / num1)  # int进行向下取整
+                res.append(ret)
+            else:
+                res.append(int(obj))
+        return res.pop()
