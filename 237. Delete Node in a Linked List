@@ -10,6 +10,8 @@ class Solution:
         :type node: ListNode
         :rtype: void Do not return anything, modify node in-place instead.
         """
+        if not node:
+            return
         # while node.next:  # 无法获得被删除结点的前驱，只能移动元素值
         #     node.val = node.next.val
         #     if not node.next.next:
@@ -22,4 +24,5 @@ class Solution:
             node.val = node.next.val
             node.next = node.next.next
         else:
+            del node
             node = None
