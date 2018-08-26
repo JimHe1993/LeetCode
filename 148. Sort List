@@ -1,0 +1,57 @@
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+class Solution:
+    def sortList(self, head):
+        """
+        :type head: ListNode
+        :rtype: ListNode
+        """
+        if not head or not head.next:
+            return head
+        list_node = []
+        while head:
+            tt = head
+            head = head.next
+            tt.next = None
+            list_node.append(tt)
+        
+        # 递归
+        return self.__merge_sort(list_node, 0, len(list_node) - 1)
+    
+    def __merge_sort(self, node_list, left, right):
+        if left >= right:
+            return node_list[left]
+        
+        mid = left + (right - left) // 2
+        left_head = self.__merge_sort(node_list, left, mid)
+        right_head = self.__merge_sort(node_list, mid+1, right)
+        return self.__merge(left_head, right_head)
+    
+    def __merge(self, left_head, right_head):
+        dummy_head = ListNode(-1)
+        pre = dummy_head
+        while left_head and right_head:
+            if left_head.val <= right_head.val:
+                pre.next = ListNode(left_head.val)
+                left_head = left_head.next
+            else:
+                pre.next = ListNode(right_head.val)
+                right_head = right_head.next
+            pre = pre.next
+        while left_head:
+            # pre.next = ListNode(left_head.val)
+            # pre = pre.next
+            # left_head = left_head.next
+            pre.next = left_head
+            break
+        while right_head:
+            # pre.next = ListNode(right_head.val)
+            # pre = pre.next
+            # right_head = right_head.next
+            pre.next = right_head
+            break
+        return dummy_head.next
