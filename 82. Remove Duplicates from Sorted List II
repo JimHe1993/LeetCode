@@ -1,0 +1,46 @@
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+class Solution:
+    def deleteDuplicates(self, head):
+        """
+        :type head: ListNode
+        :rtype: ListNode
+        """
+        # 两次遍历，1次记录重复值并删除重复值多余个数，2次遍历删除记录的重复值
+        # 时间复杂度：O(2*n) --- O(n)
+        # 空间复杂度：O(n)
+        dummy_head = ListNode(-1)
+        dummy_head.next = head
+        duplicate = set()
+        pre = dummy_head
+        pre_val = None
+        while pre.next:
+            if pre_val is None:
+                pre_val = pre.next.val
+                pre = pre.next
+                continue
+            if pre.next.val == pre_val:
+                del_node = pre.next
+                duplicate.add(del_node.val)
+                pre.next = del_node.next
+                del_node.next = None
+                del del_node
+            else:
+                pre_val = pre.next.val
+                pre = pre.next
+        # print(duplicate)
+        pre = dummy_head
+        while pre.next:
+            if pre.next.val in duplicate:
+                del_node = pre.next
+                duplicate.discard(del_node.val)
+                pre.next = del_node.next
+                del_node.next = None
+                del del_node
+            else:
+                pre = pre.next
+        return dummy_head.next
