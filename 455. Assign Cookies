@@ -1,0 +1,29 @@
+class Solution:
+    def findContentChildren(self, g, s):
+        """
+        :type g: List[int]
+        :type s: List[int]
+        :rtype: int
+        """
+        # 尝试将最大的饼干给最贪心的小朋友，如果能满足最贪心的小朋友，则次贪心的小朋友也将能被满足次大的饼干
+        # 如果最大的饼干不能满足最贪心的小朋友，那么，只能放弃最贪心的小朋友。然后尝试将最大的饼干去满足次贪心
+        # 的小朋友，以此类推。。
+        # 贪心算法每次都要取最大值或最小值，所以贪心和排序是分不开的，所以，若原始数据不是有序的，则必须进行排序
+        if not g or not s:
+            return 0
+        g.sort(reverse=True)
+        s.sort(reverse=True)
+        # print(g)
+        # print(s)
+        si = 0  # 指向最大的那块饼干
+        gi = 0  # 指向最贪心的那个小朋友
+        res = 0  # 表示能满足多少小朋友
+        while si < len(s) and gi < len(g):
+            if s[si] >= g[gi]:  # 当前饼干能够满足当前小朋友
+                res += 1
+                si += 1
+                gi += 1
+            else:  # 当前饼干不能够满足当前小朋友，看看比他不贪心的小朋友能否得到满足
+                gi += 1
+        return res
+        
