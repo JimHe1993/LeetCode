@@ -1,0 +1,56 @@
+class Solution:
+    def numSquares(self, n):
+        """
+        :type n: int
+        :rtype: int
+        """
+        # 建立图模型
+        # 要找的是几个完全平方数的和使其等于给定的正整数n
+        # 即，n经过几次递减（按题目要求递减的幅值应该是某个完全平方数）等于0
+        # 故建立具有n+1个顶点的图模型，当某两个结点之间差值为一个完全平方数时，进行连线
+        # 之后，找n->0的最短路径
+        # 这里并不是要建立图，而是使用键值对表示顶点及已经走过的步数
+#         assert n >=0
+#         visit = [False] * (n+1)
+#         queue = [{n:0}]
+#         visit[n] = True
+#         while queue:
+#             cur_v = queue.pop(0)
+#             v = -1
+#             step = -1
+#             for key, val in cur_v.items():
+#                 v = key
+#                 step = val
+            
+#             if v == 0:
+#                 return step
+            
+#             i = 1
+#             while v - i**2 >= 0:
+#                 if not visit[v-i*i]:
+#                     queue.append({(v-i*i) : step + 1})
+#                     visit[v-i*i] = True
+#                 i += 1
+        assert n >=0
+        visit = [False] * (n+1)
+        queue = [{n:0}]
+        visit[n] = True
+        while queue:
+            cur_v = queue.pop(0)
+            v = -1
+            step = -1
+            for key, val in cur_v.items():
+                v = key
+                step = val
+            
+            i = 1
+            while True:
+                temp = v - i**2
+                if temp < 0:
+                    break
+                if temp == 0:
+                    return step + 1
+                if not visit[temp]:
+                    queue.append({(temp) : step + 1})
+                    visit[temp] = True
+                i += 1
