@@ -17,8 +17,8 @@ class Solution:
     
     def __permute(self, nums, res, temp):
         if len(nums) == 1:
-            temp.append(nums[0])
-            res.append(temp)
+            # temp.append(nums[0]) # 此种操作会发生粘连效应
+            res.append(temp + [nums[0]])
             return
         for num in nums:
             t = nums[:]
