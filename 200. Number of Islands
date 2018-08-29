@@ -12,7 +12,9 @@ class Solution:
         if not grid:
             return res
         m = len(grid)
-        assert m > 0
+        # assert m > 0  #注意变通
+        if m == 0:
+            return 0
         n = len(grid[0])
         Solution.width = m
         Solution.length = n
