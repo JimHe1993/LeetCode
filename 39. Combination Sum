@@ -1,0 +1,29 @@
+class Solution:
+    def combinationSum(self, candidates, target):
+        """
+        :type candidates: List[int]
+        :type target: int
+        :rtype: List[List[int]]
+        """
+        res = []
+        if not candidates or target <= 0:
+            return res
+        self.__combine_sum(candidates, target, res, [])
+        return res
+    # 未剪枝
+    def __combine_sum(self, candidates, target, res, temp):
+        if sum(temp) == target:
+            temp_copy = temp[:]
+            temp_copy.sort()
+            if not res:
+                res.append(temp_copy)
+                return
+            if temp_copy not in res:
+                res.append(temp_copy)
+            return
+        if sum(temp) > target:
+            return
+        for candidate in candidates:
+            self.__combine_sum(candidates, target, res, temp+[candidate])
+
+        return
