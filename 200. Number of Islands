@@ -1,0 +1,47 @@
+class Solution:
+    loc = [[-1, 0], [0, 1], [1, 0], [0, -1]]
+    width = None
+    length = None
+    
+    def numIslands(self, grid):
+        """
+        :type grid: List[List[str]]
+        :rtype: int
+        """
+        res = 0
+        if not grid:
+            return res
+        m = len(grid)
+        assert m > 0
+        n = len(grid[0])
+        Solution.width = m
+        Solution.length = n
+        visited = []
+        for _ in range(m):
+            visited.append([False] * n)
+        # flag = False  # 标记是否有一个岛屿产生
+        for i in range(m):
+            for j in range(n):
+                if not visited[i][j]:
+                    if self.__search(grid, i, j, visited):
+                        res += 1
+        return res
+    # 未剪枝
+    def __search(self, grid, start_x, start_y, visited):
+        if visited[start_x][start_y]:
+            return False
+        if grid[start_x][start_y] == '0':
+            visited[start_x][start_y] = True
+            return False
+        # 找到了一块陆地，接下来看看这块陆地面积
+        visited[start_x][start_y] = True
+        for orientation in range(4):
+            new_x = start_x + Solution.loc[orientation][0]
+            new_y = start_y + Solution.loc[orientation][1]
+            if self.__in_area(new_x, new_y) and not visited[new_x][new_y]:
+                self.__search(grid, new_x, new_y, visited)
+        return True
+    
+    def __in_area(self, loc_x, loc_y):
+        return 0 <= loc_x < Solution.width and 0 <= loc_y < Solution.length
+                
