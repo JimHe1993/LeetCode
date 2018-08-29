@@ -1,0 +1,51 @@
+class Solution:
+    loc = [[-1, 0], [0, 1], [1, 0], [0, -1]] # 当前位置的 上右下左 方位
+    m = None
+    n = None
+    visited = None
+    
+    def exist(self, board, word):
+        """
+        :type board: List[List[str]]
+        :type word: str
+        :rtype: bool
+        """
+        if not board:
+            return False
+        if not word:
+            return True
+        Solution.m = len(board)
+        assert Solution.m > 0
+        Solution.n = len(board[0])
+        Solution.visited = []
+        for _ in range(Solution.m):
+            Solution.visited.append([False]*Solution.n)
+        print(Solution.visited)
+        for i in range(Solution.m):
+            for j in range(Solution.n): # 表示以board中每一个点为起点进行搜索
+                if self.__search_word(board, word, 0, i, j):  # 在board中找 word[0...len(word))
+                    return True
+        return False
+    
+    def __search_word(self, board, word, idx, start_x, start_y):
+        '''
+        在board[start_x][start_y] 处搜索 word[idx]，一旦找到就在idx的上下左右递归搜索下一个匹配字符，否则回溯到上一层递归并重新开始寻找
+        '''
+        # 递归结束条件（当只差最后一个字符为匹配时，其余情况，下面代码隐含了递归结束（回溯到了上一层or上一层or重新换了起始点））
+        if idx == len(word) - 1:
+            return board[start_x][start_y] == word[idx]  # 因为不用再向下寻找了，所以直接判断
+        if board[start_x][start_y] == word[idx]:
+            Solution.visited[start_x][start_y] = True
+            # 开始在idx的上下左右寻找下一个字符
+            for i in range(4):
+                new_x = start_x + Solution.loc[i][0]
+                new_y = start_y + Solution.loc[i][1]
+                if self.__in_area(new_x, new_y) and not Solution.visited[new_x][new_y]:
+                    if self.__search_word(board, word, idx+1, new_x, new_y):
+                        return True
+            Solution.visited[start_x][start_y] = False
+        return False
+    
+    def __in_area(self, loc_x, loc_y):
+        return 0 <= loc_x < Solution.m and 0 <= loc_y < Solution.n
+        
