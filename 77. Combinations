@@ -5,18 +5,39 @@ class Solution:
         :type k: int
         :rtype: List[List[int]]
         """
+#         res = []
+#         if n <= 0 or k <= 0 or n < k:
+#             return res
+#         self.__combine(n, k, 1, res, [])
+#         return res
+    
+#     def __combine(self, n, k, start, res, temp): # 求C(n, k)，从start数字开始，往后寻找k个数字形成组合
+#         if len(temp) == k:
+#             res.append(temp)
+#             return
+        
+#         for num in range(start, n+1):
+#             self.__combine(n, k, num+1, res, temp+[num])
+
         res = []
         if n <= 0 or k <= 0 or n < k:
             return res
-        self.__combine(n, k, 1, res, [])
+        combine_list = []
+        self.__combine(n, k, 1, res, combine_list)
         return res
     
-    def __combine(self, n, k, start, res, temp): # 求C(n, k)，从start数字开始，往后寻找k个数字形成组合
+    def __combine(self, n, k, start, res, temp):
         if len(temp) == k:
-            res.append(temp)
+            # print(temp)
+            # res.append(temp) # 修改temp会res里面之前存入的temp----神奇扯淡的Python
+            temp_copy = temp[:]
+            res.append(temp_copy)
+            # print(res)
             return
         
         for num in range(start, n+1):
-            self.__combine(n, k, num+1, res, temp+[num])
-            
-            
+            temp.append(num)
+            self.__combine(n, k, num + 1, res, temp)
+            temp.pop()
+        return
+    
