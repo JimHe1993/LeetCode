@@ -34,10 +34,16 @@ class Solution:
             res.append(temp_copy)
             # print(res)
             return
-        
-        for num in range(start, n+1):
+        # 每次进来，已经有了len(temp)个元素，还需要k-len(temp)个元素构成组合
+        # 所以要求剩余的可以取值的范围大小至少是n-(k-len(temp))+1
+        # for num in range(start, n+1):
+        for num in range(start, n-(k-len(temp))+1+1):
             temp.append(num)
             self.__combine(n, k, num + 1, res, temp)
             temp.pop()
         return
+    
+    
+    
+    
     
