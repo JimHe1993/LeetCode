@@ -9,19 +9,43 @@ class Solution:
         #               [2, 3] [1, 3] [1, 2]
         #              [3] [2] [3][1] [2][1]
         # [1, 2, 3], [1, 3, 2], [2, 1, 3], [2, 3, 1], [3, 1, 2], [3, 2, 1]
+#         res = []
+#         if not nums:
+#             return res
+#         self.__permute(nums, res, [])
+#         return res
+    
+#     def __permute(self, nums, res, temp):
+#         if len(nums) == 1:
+#             # temp.append(nums[0]) # 此种操作会发生粘连效应
+#             res.append(temp + [nums[0]])
+#             return
+#         for num in nums:
+#             t = nums[:]
+#             t.remove(num)
+#             self.__permute(t, res, temp+[num])
+#         return
+
         res = []
         if not nums:
             return res
-        self.__permute(nums, res, [])
+        visit = [False] * len(nums)
+        self.__permute(nums, visit, res, [])
         return res
     
-    def __permute(self, nums, res, temp):
-        if len(nums) == 1:
-            # temp.append(nums[0]) # 此种操作会发生粘连效应
-            res.append(temp + [nums[0]])
+    def __permute(self, nums, visit, res, temp):
+        if len(temp) == len(nums):
+            temp_copy = temp[:]
+            res.append(temp_copy)
             return
-        for num in nums:
-            t = nums[:]
-            t.remove(num)
-            self.__permute(t, res, temp+[num])
+        for idx, num in enumerate(nums):
+            if not visit[idx]:
+                visit[idx] = True
+                temp.append(num)
+                self.__permute(nums, visit, res, temp)
+                temp.pop()
+                visit[idx] = False
         return
+
+
+
