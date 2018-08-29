@@ -1,0 +1,22 @@
+class Solution:
+    def combine(self, n, k):
+        """
+        :type n: int
+        :type k: int
+        :rtype: List[List[int]]
+        """
+        res = []
+        if n <= 0 or k <= 0 or n < k:
+            return res
+        self.__combine(n, k, 1, res, [])
+        return res
+    
+    def __combine(self, n, k, start, res, temp): # 求C(n, k)，从start数字开始，往后寻找k个数字形成组合
+        if len(temp) == k:
+            res.append(temp)
+            return
+        
+        for num in range(start, n+1):
+            self.__combine(n, k, num+1, res, temp+[num])
+            
+            
