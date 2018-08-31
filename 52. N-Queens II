@@ -1,0 +1,35 @@
+class Solution:
+    res = None
+    def totalNQueens(self, n):
+        """
+        :type n: int
+        :rtype: int
+        """
+        # 与51题一样
+        if n <= 0:
+            return 0
+        if n == 1:
+            return 1
+        Solution.res = 0
+        col = [False] * n
+        dia1 = [False] * (2 * n - 1)
+        dia2 = [False] * (2 * n - 1)
+        self.__queen(n, 0, [], col, dia1, dia2)
+        return Solution.res
+    
+    def __queen(self, n, row, temp, col, dia1, dia2):
+        if row == n:
+            assert len(temp) == n
+            Solution.res += 1
+            return
+        
+        for column in range(n):
+            if not col[column] and not dia1[row + column] and not dia2[row - column + n - 1]:
+                col[column] = True
+                dia1[row + column] = True
+                dia2[row - column + n - 1] = True
+                self.__queen(n, row + 1, temp + [column], col, dia1, dia2)
+                col[column] = False
+                dia1[row + column] = False
+                dia2[row - column + n - 1] = False
+        return
