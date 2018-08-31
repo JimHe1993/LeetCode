@@ -1,0 +1,35 @@
+class Solution:
+    def climbStairs(self, n):
+        """
+        :type n: int
+        :rtype: int
+        """
+        # if n < 0:
+        #     return 0
+        # 递归
+        # if n == 0 or n == 1 or n == 2:
+        #     return n
+        # return self.climbStairs(n-1) + self.climbStairs(n-2)
+        
+        # 记忆化搜索
+#         memo = [-1] * (n+1)
+#         return self.__fib(n, memo)
+    
+#     def __fib(self, n, memo):
+#         if n == 0 or n == 1 or n == 2:
+#             memo[n] = n
+#         if memo[n] == -1:
+#             memo[n] = self.__fib(n-1, memo) + self.__fib(n-2, memo)
+#         return memo[n]
+        
+        # 动态规划
+        if n < 0:
+            return 0
+        if n == 0 or n == 1:
+            return n
+        fib = [None] * (n+1)
+        fib[1] = 1
+        fib[2] = 2
+        for i in range(3, n+1):
+            fib[i] = fib[i-1] + fib[i-2]
+        return fib[n]
