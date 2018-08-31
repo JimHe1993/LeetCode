@@ -1,0 +1,43 @@
+class Solution:
+    def solveNQueens(self, n):
+        """
+        :type n: int
+        :rtype: List[List[str]]
+        """
+        res = []
+        if n <= 0:
+            return res
+        if n == 1:
+            return [['Q']]
+        # 递归调用——回溯
+        # n个皇后放在n*n的棋盘上，不冲突，则每行必有一个皇后
+        # 快速判断不合法的情况
+        # 使用col[i]表示第i列是否被占用
+        # dia1[i], dia2[i]表示对角线是否不能放置元素了，请画图，对角线规律一眼便知
+        col = [False] * n
+        dia1 = [False] * (2 * n - 1)
+        dia2 = [False] * (2 * n - 1)
+        self.__queen(n, 0, res, [], col, dia1, dia2)  # 从第一行开始，每行放一个皇后，每行皇后暂时确定的位置放入列表中
+        return res
+    
+    def __queen(self, n, row, res, temp, col, dia1, dia2):
+        if row == n:  # 得到一个解
+            assert len(temp) == n
+            solution = []
+            for r in range(row):
+                strs = ['.'] * n
+                strs[temp[r]] = 'Q'
+                solution.append(''.join(strs))
+            res.append(solution)
+            return 
+        
+        for column in range(n):  # 每一行的每一列都需要尝试放置当前行的皇后
+            if not col[column] and not dia1[row + column] and not dia2[row - column + n - 1]:
+                col[column] = True
+                dia1[row + column] = True
+                dia2[row - column + n - 1] = True
+                self.__queen(n, row + 1, res, temp + [column], col, dia1, dia2)
+                col[column] = False
+                dia1[row + column] = False
+                dia2[row - column + n - 1] = False
+        return 
