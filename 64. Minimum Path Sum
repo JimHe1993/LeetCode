@@ -1,0 +1,61 @@
+class Solution:
+    loc = [[0, 1], [1, 0]]
+    res = None
+    rows = None
+    cols = None
+    def minPathSum(self, grid):
+        """
+        :type grid: List[List[int]]
+        :rtype: int
+        """
+        if not grid:
+            return 0
+        m = len(grid)
+        if m <= 0:
+            return 0
+        n = len(grid[0])
+        if n <= 0:
+            return 0
+        res_list = []
+        
+        # 动态规划，修改 grid
+        i = n-2
+        while i >= 0:
+            grid[m-1][i] += grid[m-1][i+1]
+            i -= 1
+        i = m-2
+        while i >= 0:
+            grid[i][n-1] += grid[i+1][n-1]
+            i -= 1
+        for i in range(m-2, -1, -1):
+            for j in range(n-2, -1, -1):
+                sum1 = grid[i][j] + grid[i+1][j]
+                sum2 = grid[i][j] + grid[i][j+1]
+                grid[i][j] = sum1 if sum1 < sum2 else sum2
+        return grid[0][0]
+        
+        # 递归超时
+#         Solution.rows = m
+#         Solution.cols = n
+#         Solution.res = None
+#         self.__dfs(grid, 0, 0, [])
+#         return Solution.res
+    
+#     def __dfs(self, grid, i, j, temp):
+#         if i == Solution.rows - 1 and j == Solution.cols - 1:
+#             summ = sum(temp) + grid[i][j]
+#             if Solution.res is None:
+#                 Solution.res = summ
+#             else:
+#                 if Solution.res > summ:
+#                     Solution.res = summ
+#             return
+#         for forward in range(2):
+#             new_i = i + Solution.loc[forward][0]
+#             new_j = j + Solution.loc[forward][1]
+#             if self.__is_valid(new_i, new_j):
+#                 self.__dfs(grid, new_i, new_j, temp + [grid[i][j]])
+#         return 
+    
+#     def __is_valid(self, loc_x, loc_y):
+#         return 0 <= loc_x < Solution.rows and 0 <= loc_y < Solution.cols
