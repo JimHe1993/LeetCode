@@ -1,0 +1,43 @@
+# Definition for an interval.
+# class Interval:
+#     def __init__(self, s=0, e=0):
+#         self.start = s
+#         self.end = e
+
+class Solution:
+    def eraseOverlapIntervals(self, intervals):
+        """
+        :type intervals: List[Interval]
+        :rtype: int
+        """
+        # if not intervals:
+        #     return 0
+        # len_i = len(intervals)
+        # # intervals = [Interval(1, 2), Interval(2, 3), Interval(3, 4), Interval(1, 3)]
+        # # intervals = [Interval(1, 2), Interval(1, 2), Interval(1, 2)]
+        # # intervals = [Interval(1, 2), Interval(2, 3)]
+        # intervals.sort(key=lambda interval : interval.end and interval.start, reverse=False)
+        # # for i in intervals:
+        #     # print(i.start, '-', i.end)
+        # # memo[i] 记录 intervals[i]的最长上升区间
+        # memo = [1] * len_i
+        # # 动态规划——超时
+        # for i in range(1, len_i):
+        #     for j in range(i):
+        #         if intervals[i].start >= intervals[j].end:
+        #             memo[i] = max(memo[i], 1 + memo[j])
+        # # print(len_i - max(memo))
+        # return len_i - max(memo)
+        
+        # 贪心算法，对区间的结尾排序，每次选择结尾值小的，因为这样能更多的容下更多的区间
+        if not intervals:
+            return 0
+        len_i = len(intervals)
+        intervals.sort(key = lambda interval : interval.start and interval.end)  # 注意，先比较的标准写在后面
+        pre = 0
+        res = 1
+        for cur in range(1, len_i):
+            if intervals[cur].start >= intervals[pre].end:
+                res += 1
+                pre = cur
+        return len_i - res
