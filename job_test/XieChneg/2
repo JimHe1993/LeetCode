@@ -1,0 +1,47 @@
+'''
+携程笔试：2、求KL散度
+'''
+
+import math
+
+import numpy as np
+
+from scipy import *
+
+
+def asymmetricKL(P, Q):
+    return sum(P * log2(P / Q))  # calculate the kl divergence between P and Q
+
+
+def symmetricalKL(P, Q):
+    return (asymmetricKL(P, Q) + asymmetricKL(Q, P)) / 2.00
+
+
+def kl(p_true, q_approx):
+    res = 0
+    for pp, qq in zip(p_true, q_approx):
+        res += pp * math.log2(pp/qq)
+    return res
+
+
+if __name__ == "__main__":
+    p = [1, 1, 1, 2, 3, 4, 1, 2, 3, 4, 1, 3, 4, 1, 2, 3, 3, 1, 2, 3, 1, 2, 3, 1, 3, 1]
+    # p = [1, 1, 1, 2, 3, 4, 1, 2, 3, 4, 1, 3, 4, 1, 2, 3, 3, 1, 2, 3, 1, 2]
+    q = [2, 2, 2, 2, 3, 4, 4, 2, 2, 1, 2, 4, 3, 2, 2, 1, 3, 4, 4, 2, 4, 3]
+
+    dict_pq = {}
+    for pp in p:
+        if pp not in dict_pq:
+            dict_pq[pp] = [1, 0]
+        else:
+            dict_pq[pp][0] += 1
+    for qq in q:
+        dict_pq[qq][1] += 1
+    prob_p = []
+    prob_q = []
+    for value in dict_pq.values():
+        prob_p.append(value[0] / len(p))
+        prob_q.append(value[1] / len(q))
+
+    print(asymmetricKL(np.array(prob_p), np.array(prob_q)))
+    print(kl(prob_p, prob_q))
