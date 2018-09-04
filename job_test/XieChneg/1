@@ -1,0 +1,74 @@
+'''
+携程笔试：1、求互信息/信息增益
+'''
+
+import math
+
+
+def empirical_entropy(vec):
+    assert vec is not None, '空列表'
+    m = len(vec)
+    if m == 0:
+        return
+    # 统计频次
+    dict_vec = {}
+    for v in vec:
+        if v not in dict_vec:
+            dict_vec[v] = 1
+        else:
+            dict_vec[v] += 1
+    prob = []
+    for val in dict_vec.values():
+        prob.append(val / m)
+    res = 0
+    # 计算经验熵
+    for p in prob:
+        res += p * math.log2(p)
+    return -1 * res
+
+
+def conditional_entropy(x, y):
+    assert x is not None or y is not None, '空列表'
+    m = len(x)
+    n = len(y)
+    if m == 0 or n == 0:
+        return
+    # 统计特征 x 的取值频次，并且记录特征值索引以便用于求特征值所在的子集的经验熵
+    dict_x = {}
+    for idx, val in enumerate(x):
+        if val not in dict_x:
+            dict_x[val] = [1, idx]
+        else:
+            dict_x[val][0] += 1
+            dict_x[val].append(idx)
+    # 计算特征取值频率
+    # 计算特征值对应子集的经验熵
+    prob_x = []
+    cond_entropy = []
+    for value in dict_x.values():
+        prob_x.append(value[0] / m)
+        temp = []
+        for idx in value[1:]:
+            temp.append(y[idx])
+        cond_entropy.append(empirical_entropy(temp))
+    # 计算特征值对应子集的经验熵
+    # cond_entropy = []
+    # for value in dict_x.values():
+    #     temp = []
+    #     for idx in value[1:]:
+    #         temp.append(y[idx])
+    #     cond_entropy.append(empirical_entropy(temp))
+    res = 0
+    for p, e in zip(prob_x, cond_entropy):
+        res += p * e
+    return res
+
+
+def mutu_information(x, y):
+    return empirical_entropy(y) - conditional_entropy(x, y)
+
+
+if __name__ == "__main__":
+    test_x = [1, 1, 2, 0, 3]
+    test_y = [1, 1, 0, 0, 0]
+    print(mutu_information(test_x, test_y))
