@@ -1,0 +1,36 @@
+'''
+字符串距离——题目连接：https://blog.csdn.net/XH413235699/article/details/79676093
+维护滑动窗口，定义两等长字符串的距离
+'''
+
+
+def str_dis(s, t):
+    if not s or not t:
+        return 0
+    len_s = len(s)
+    len_t = len(t)
+    i = 0
+    j = len_t - 1
+    res = 0
+    while j < len_s:
+        sub_s = s[i:j + 1]
+        res += dis(sub_s, t)
+        i += 1
+        j += 1
+    return res
+
+
+def dis(sub_s, t):
+    res = 0
+    for ss, tt in zip(sub_s, t):
+        if ss != tt:
+            res += 1
+    return res
+
+
+if __name__ == "__main__":
+    s = 'aab'
+    t = 'aba'
+    s = 'aaabb'
+    t = 'bab'
+    print(str_dis(s, t))
