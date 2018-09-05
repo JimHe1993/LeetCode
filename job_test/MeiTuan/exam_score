@@ -1,0 +1,29 @@
+'''
+改试卷——题目链接：https://blog.csdn.net/LiuPeiP_VIPL/article/details/77754921
+1、第一种情况：试卷不够分给某一组的每个人，说明前面组的人数太少
+2、第二种情况：学生改自己的试卷，前面组（第一组）人数太多
+贪心算法：依次访问人数递减的组
+'''
+
+
+def exam_score(n, peoples):
+    if not peoples:
+        return True
+    peoples.sort(reverse=True)
+    if peoples[0] < sum(peoples) // 2:
+        return True
+    else:
+        return False
+
+
+if __name__ == "__main__":
+    n = 2
+    peoples = [10, 20]
+    n = 4
+    peoples = [1, 2, 3, 3]
+    n = 3
+    peoples = [3, 3, 2]
+    if exam_score(n, peoples):
+        print('Yes')
+    else:
+        print('No')
