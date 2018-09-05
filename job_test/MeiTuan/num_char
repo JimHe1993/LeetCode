@@ -1,0 +1,43 @@
+'''
+数字字符——题目链接：https://blog.csdn.net/XH413235699/article/details/79676093
+输入是由'0'-'9'组成的字符串，求字符串中数字所有可能组合中无法组成的最小整数
+思路：求字符串中所有数字的频次，答案一定是某一个数被重复了n次的，或者是1加上0被重复n次（因为不能出现前导0）
+'''
+
+
+def min_num(strr):
+    if not strr:
+        return 0
+    num = [0] * 10
+    for s in strr:
+        num[int(s)] += 1
+    num[0] += 1
+    print(num)
+    key = -1
+    min_freq = -1
+    for idx, freq in enumerate(num):
+        if idx == 0:
+            key = idx
+            min_freq = freq
+        else:
+            if freq < min_freq:
+                min_freq = freq
+                key = idx
+    res = ''
+    if key == 0:
+        res += '1'
+        for i in range(num[key]):
+            res += '0'
+    else:
+        num[key] += 1
+        for i in range(num[key]):
+            res += str(key)
+    return res
+
+
+if __name__ == "__main__":
+    test_str = '55'
+    test_str = '123456789'
+    test_str = '1000022324203403050405040601112121324234465231214686797808966453423' \
+               '14656785854705002304203020032040305604570507004503043050034606403456789'
+    print(min_num(test_str))
