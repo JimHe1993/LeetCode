@@ -1,0 +1,27 @@
+class Solution:
+    res = None
+
+    def permuteUnique(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: List[List[int]]
+        """
+        if not nums:
+            return None
+        Solution.res = []
+        len_nums = len(nums)
+        visited = [False] * len_nums
+        self.__permute(nums, 0, len_nums, visited, []) # []传入用于存放单个排列的列表
+        return Solution.res
+
+    def __permute(self, nums, idx, len_nums, visited, temp):
+        if idx == len_nums:
+            if temp not in Solution.res:  # 保证对有重复元素的列表进行全排列
+                Solution.res.append(temp)
+            return
+        for index, num in enumerate(nums):
+            if not visited[index]:
+                visited[index] = True
+                self.__permute(nums, idx + 1, len_nums, visited, temp + [num])
+                visited[index] = False
+        
