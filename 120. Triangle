@@ -1,0 +1,43 @@
+class Solution:
+    res = None
+    rows = None
+    cols = None
+    
+    def minimumTotal(self, triangle):
+        """
+        :type triangle: List[List[int]]
+        :rtype: int
+        """
+        if not triangle:
+            return 0
+        m = len(triangle)
+        if m == 0:
+            return 0
+        n = len(triangle[0])
+        if n == 0:
+            return 0
+        Solution.res = None
+        Solution.rows = m
+        Solution.cols = n
+        # 从第1行开始递归，第一行只有一个元素，所以列索引为0，初始和为0
+        # self.__min_total(triangle, 0, 0, 0)
+        # return Solution.res
+        
+        # DP
+        for i in range(len(triangle) - 2, -1, -1):
+            for j in range(len(triangle[i])):
+                triangle[i][j] = min(triangle[i][j] + triangle[i+1][j], triangle[i][j] + triangle[i+1][j+1])
+        return triangle[0][0]
+    
+    def __min_total(self, triangle, row, col, summ):
+        if row == Solution.rows - 1:
+            if Solution.res is None:
+                Solution.res = summ + triangle[row][col]
+            else:
+                Solution.res = min(Solution.res, summ + triangle[row][col])
+            return
+        
+        for i in range(2):
+            self.__min_total(triangle, row+1, col+i, summ + triangle[row][col])
+        return 
+        
