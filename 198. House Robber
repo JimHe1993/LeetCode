@@ -1,0 +1,44 @@
+class Solution:
+    def rob(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        if not nums:
+            return 0
+        n = len(nums)
+        if n == 0:
+            return 0
+        # 初始时考虑偷取 [0 ... n-1]间房
+        # 记忆化搜索
+        # memo[i] 表示偷取 [i ... n-1]的最大值
+        memo = [-1] * n
+        # return self.__try_rob(nums, 0, n, memo)
+        
+        # 动态规划 memo[i] 表示偷取 [i ... n-1]的最大值
+        # memo[n - 1] = nums[n - 1]
+        # for i in range(n - 2, -1, -1):
+        #     for j in range(i, n):
+        #         memo[i] = max(memo[i], nums[j] + (memo[j + 2] if j + 2 < n else 0))
+        # return memo[0]
+    
+        # 动态规划 memo[i] 表示偷取 [0 ... i]的最大值
+        memo[0] = nums[0]
+        for i in range(1, n):
+            for j in range(i, -1, -1):
+                memo[i] = max(memo[i], nums[j] + (memo[j - 2] if j - 2 > -1 else 0))
+        return memo[n-1]
+    
+    def __try_rob(self, nums, idx, n, memo):
+        if idx == n - 1:
+            return nums[idx]
+        if idx >= n:
+            return 0
+        if memo[idx] != -1:
+            return memo[idx]
+        # 考虑偷取 [idx ... n-1]，可以偷取 nums[idx] + try_rob(idx+2), 或 nums[idx+1] + try_rob(idx+3)
+        max_rob = 0
+        for house_id in range(idx, n):
+            max_rob = max(max_rob, nums[house_id] + self.__try_rob(nums, house_id + 2, n, memo))
+        memo[idx] = max_rob
+        return max_rob
