@@ -1,9 +1,10 @@
 # Definition for a binary tree node.
-# class TreeNode:
-#     def __init__(self, x):
-#         self.val = x
-#         self.left = None
-#         self.right = None
+class TreeNode:
+    def __init__(self, x):
+        self.val = x
+        self.left = None
+        self.right = None
+
 
 class Solution:
     def minDepth(self, root):
@@ -11,14 +12,13 @@ class Solution:
         :type root: TreeNode
         :rtype: int
         """
+        # 求二叉树的最小深度——从根节点到最近叶子节点的最短路径上的节点数量。注意是到叶子节点终止
+        # 显然使用递归求解，从根节点开始递归的在其左右子树中寻找第一个叶子结点，每递归一层，深度加1
+        # 注意递归终止条件——当前结点是叶子节点才终止
         if not root:
             return 0
-        if not root.left and not root.right:
-            return 1
-        if root.left and not root.right:
-            return self.minDepth(root.left) + 1
-        if root.right and not root.left:
-            return self.minDepth(root.right) + 1
-        if root.right and root.left:
-            return min(self.minDepth(root.left), self.minDepth(root.right)) + 1
-        
+        if not root.left:
+            return 1 + self.minDepth(root.right)
+        if not root.right:
+            return 1 + self.minDepth(root.left)
+        return 1 + min(self.minDepth(root.left), self.minDepth(root.right))
