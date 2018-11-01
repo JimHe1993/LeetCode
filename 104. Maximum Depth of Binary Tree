@@ -1,9 +1,10 @@
 # Definition for a binary tree node.
-# class TreeNode:
-#     def __init__(self, x):
-#         self.val = x
-#         self.left = None
-#         self.right = None
+class TreeNode:
+    def __init__(self, x):
+        self.val = x
+        self.left = None
+        self.right = None
+
 
 class Solution:
     def maxDepth(self, root):
@@ -11,20 +12,24 @@ class Solution:
         :type root: TreeNode
         :rtype: int
         """
-        if not root:
+        # 本题求二叉树的最大深度，深度定义为根节点到最远叶子节点的最长路径上的节点数。
+        # 解法一：从根节点开始递归其左右子树，寻找最深的叶子节点，每递归一层深度加1
+        # if root is None:
+        #     return 0
+        # return 1 + max(self.maxDepth(root.left), self.maxDepth(root.right))
+
+        # 解法二：对二叉树进行层序遍历，有多少层即有多深
+        if root is None:
             return 0
-        
         queue = [root]
-        res = 0
+        deepth = 0
         while queue:
-            res += 1
-            temp_queue = []
+            deepth += 1
+            temp = []
             for node in queue:
                 if node.left:
-                    temp_queue.append(node.left)
+                    temp.append(node.left)
                 if node.right:
-                    temp_queue.append(node.right)
-            queue = temp_queue
-        return res
-    
-        # return max(self.maxDepth(root.left), self.maxDepth(root.right))+1
+                    temp.append(node.right)
+            queue = temp
+        return deepth
