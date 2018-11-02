@@ -1,9 +1,10 @@
 # Definition for a binary tree node.
-# class TreeNode:
-#     def __init__(self, x):
-#         self.val = x
-#         self.left = None
-#         self.right = None
+class TreeNode:
+    def __init__(self, x):
+        self.val = x
+        self.left = None
+        self.right = None
+
 
 class Solution:
     def invertTree(self, root):
@@ -11,35 +12,34 @@ class Solution:
         :type root: TreeNode
         :rtype: TreeNode
         """
+        # 翻转一棵二叉树
+        # 思路：任何一棵非空二叉树，都有一个头结点，所以头结点一定是固定的，
+        # 那么只需一层一层把当前结点的左右孩子结点交换就能达到翻转的目的
         # if not root:
         #     return None
         # queue = [root]
         # while queue:
-        #     node = queue.pop(0)
-        #     left = node.left
-        #     node.left = node.right
-        #     node.right = left
-        #     if node.left:
-        #         queue.append(node.left)
-        #     if node.right:
-        #         queue.append(node.right)
+        #     level = []
+        #     for node in queue:
+        #         temp = node.left
+        #         node.left = node.right
+        #         node.right = temp
+        #         if node.left:
+        #             level.append(node.left)
+        #         if node.right:
+        #             level.append(node.right)
+        #     queue = level
         # return root
         
-        # 递归——递归调换每个结点的左右结点
+        # 思路二：递归调换每个结点的左右子节点
         self.__invert(root)
         return root
-    
+
     def __invert(self, node):
-        if not node:
-            return
-        left = node.left
+        if not node:  # 递归终止条件
+            return 
+        temp = node.left  # 交换左右孩子结点
         node.left = node.right
-        node.right = left
-        self.__invert(node.left)
-        self.__invert(node.right)
-        
-        
-        
-        
-        
-        
+        node.right = temp
+        self.__invert(node.left)  # 递归左子树
+        self.__invert(node.right)  # 递归右子树
