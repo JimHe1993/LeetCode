@@ -1,0 +1,20 @@
+2、一个二维的0/1矩阵，即矩阵里所有的元素或0或1，找出里面最大的一个全为1的正方形。
+def solve(matrix):
+	if not matrix:
+		return
+	m = len(matrix)
+	if m < 1:
+		return
+	n = len(matrix[0])
+	if n < 1:
+		return
+	max = 0
+	for i in range(1, m):
+		for j in range(1, n):
+			if matrix[i][j] == 1:
+				mm = min(matrix[i - 1][j], matrix[i][j - 1])
+				mm = min(matrix[i - 1][j-1], mm)
+				matrix[i][j] = mm + 1
+				if max < matrix[i][j]:
+					max = matrix[i][j]
+return max
