@@ -24,3 +24,37 @@ class Solution:
         if left.val != right.val:
             return False
         return self.mirror(left.left, right.right) and self.mirror(left.right, right.left)
+
+解法二
+# Definition for a binary tree node.
+class TreeNode:
+    def __init__(self, x):
+        self.val = x
+        self.left = None
+        self.right = None
+
+
+class Solution:
+    def isSymmetric(self, root):
+        """
+        :type root: TreeNode
+        :rtype: bool
+        """
+        # 判断二叉树是否是镜像对称
+        # 递归判断当前结点是否对称，然后判断其左节点的左子树和右节点的右子树是否对称，
+        # 右节点的左子树和左节点的右子树是否对称。
+        # 注意递归终止条件
+        if not root:
+            return True
+        return self.__is_symmetric(root.left, root.right)
+
+    def __is_symmetric(self, p, q):
+        if not p and not q:
+            return True
+        if not p and q:
+            return False
+        if p and not q:
+            return False
+        if p.val != q.val:
+            return False
+        return self.__is_symmetric(p.left, q.right) and self.__is_symmetric(p.right, q.left)
