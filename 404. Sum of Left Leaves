@@ -1,9 +1,10 @@
 # Definition for a binary tree node.
-# class TreeNode:
-#     def __init__(self, x):
-#         self.val = x
-#         self.left = None
-#         self.right = None
+class TreeNode:
+    def __init__(self, x):
+        self.val = x
+        self.left = None
+        self.right = None
+
 
 class Solution:
     def sumOfLeftLeaves(self, root):
@@ -11,19 +12,33 @@ class Solution:
         :type root: TreeNode
         :rtype: int
         """
-        # 递归判断每个节点，是不是左节点+叶子节点
+        # 计算树中所有左叶子之和，注意一定是叶子节点，而且该叶子节点是其父节点的左孩子
+        # 思路一：递归遍历得到所有左叶子，再求和
+        # 注意，空树返回0；只有一个根节点返回其值
+        # left_leaves = []
+        # self.__left_leaves(root, left_leaves)
+        # return sum([node.val for node in left_leaves])
+
+        # 思路二：判断子节点是否是左孩子结点+叶子节点
         if not root:
             return 0
-        
         res = 0
-        
-        if root.left and self.is_leaf(root.left):
+        if root.left and self.__is_leaf(root.left):
             res += root.left.val
-        
         res += self.sumOfLeftLeaves(root.left) + self.sumOfLeftLeaves(root.right)
-        
         return res
-    
-    def is_leaf(self, node):
+
+    def __left_leaves(self, node, left_leaves):
+        if not node:
+            return
         if not node.left and not node.right:
-            return True
+            return
+        if node.left:  # 只有当前结点的左孩子是叶子节点才满足要求
+            if not node.left.left and not node.left.right:
+                left_leaves.append(node.left)
+            else:
+                self.__left_leaves(node.left, left_leaves)
+        self.__left_leaves(node.right, left_leaves)
+
+    def __is_leaf(self, node):
+        return not node.left and not node.right
