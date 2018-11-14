@@ -1,0 +1,29 @@
+# Definition for a binary tree node.
+class TreeNode:
+    def __init__(self, x):
+        self.val = x
+        self.left = None
+        self.right = None
+
+
+class Solution:
+    def hasPathSum(self, root, sum):
+        """
+        :type root: TreeNode
+        :type sum: int
+        :rtype: bool
+        """
+        # 判断从根节点到叶结点是否有所有节点值相加等于目标和的路径
+        # 本题只要求找是否存在路径，故找到一条即可，若是要求找出所有满足要求的路径，
+        # 则需要递归遍历完所有路径，这里就涉及到时间复杂度，也就可以引入动态规划。
+        # 思路：从根节点开始递归，每经过一个结点，减去结点当前值，直到到达叶结点，
+        # 若叶结点值等于当前目标值，则成功找到一条路径，否则回退继续递归，当递归
+        # 完整棵树都没有满足要求的路径，则返回False
+        return self.__path_sum(root, sum)
+
+    def __path_sum(self, node, sum):
+        if not node:
+            return False
+        if not node.left and not node.right:  # 注意递归到叶结点才终止
+            return node.val == sum
+        return self.__path_sum(node.left, sum - node.val) or self.__path_sum(node.right, sum - node.val)
