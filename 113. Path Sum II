@@ -1,9 +1,10 @@
 # Definition for a binary tree node.
-# class TreeNode:
-#     def __init__(self, x):
-#         self.val = x
-#         self.left = None
-#         self.right = None
+class TreeNode:
+    def __init__(self, x):
+        self.val = x
+        self.left = None
+        self.right = None
+
 
 class Solution:
     def pathSum(self, root, sum):
@@ -12,20 +13,40 @@ class Solution:
         :type sum: int
         :rtype: List[List[int]]
         """
-        res = []
-        if not root:
-            return res
-        if not root.left and not root.right:
-            if root.val == sum:
-                res.append([root.val])
-            return res
-        left = self.pathSum(root.left, sum-root.val)
-        for l in left:
-            res.append([root.val] + l)
-        right = self.pathSum(root.right, sum-root.val)
-        for r in right:
-            res.append([root.val] + r)
+        # 找到二叉树中所有从根节点到叶子节点路径总和等于给定目标和的路径
+        # 同样，注意递归终止条件是叶子节点，找到所有路径，还需要满足目标和要求
+        # 友情提示：这种题还需要问清楚空树对应的情况，比如，若是一颗空树，
+        # sum=0的情况算不算对，本题直接返回空列表
+        res = []  # 存放最终结果
+        temp = []  # 存放中间路径结点值
+        self.__path_sum(root, res, temp, sum)
         return res
+
+        # 先递归到底，在递归返回过程中生成完整路径
+        # res = []
+        # if not root:
+        #     return res
+        # if not root.left and not root.right:
+        #     if root.val == sum:
+        #         res.append([root.val])
+        #     return res
+        # left = self.pathSum(root.left, sum-root.val)
+        # for l in left:
+        #     res.append([root.val] + l)
+        # right = self.pathSum(root.right, sum-root.val)
+        # for r in right:
+        #     res.append([root.val] + r)
+        # return res
+
+    def __path_sum(self, node, res, temp, summ):
+        if not node:
+            return
+        if not node.left and not node.right:
+            if sum(temp) + node.val == summ:
+                res.append(temp + [node.val])
+            return
+        self.__path_sum(node.left, res, temp + [node.val], summ)
+        self.__path_sum(node.right, res, temp + [node.val], summ)
 
 # class Solution:
 #     def pathSum(self, root, sum):
@@ -37,12 +58,12 @@ class Solution:
 #         res = []
 #         if not root:
 #             return res
-        
+
 #         path = []
-        
+
 #         self.__path(root, res, path, sum)
 #         return res
-    # 整个递归，path都会被改变，而不是回溯时回到当前层的状态
+# 整个递归，path都会被改变，而不是回溯时回到当前层的状态
 #     def __path(self, node, res, path, summ):
 #         if not node.left and not node.right:
 #             su = node.val
