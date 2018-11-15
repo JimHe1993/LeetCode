@@ -1,9 +1,10 @@
 # Definition for a binary tree node.
-# class TreeNode:
-#     def __init__(self, x):
-#         self.val = x
-#         self.left = None
-#         self.right = None
+class TreeNode:
+    def __init__(self, x):
+        self.val = x
+        self.left = None
+        self.right = None
+
 
 class Solution:
     def binaryTreePaths(self, root):
@@ -11,16 +12,59 @@ class Solution:
         :type root: TreeNode
         :rtype: List[str]
         """
-        res = []
-        if not root:
-            return res
-        r_str = ''
-        self.__path(root, res, r_str)
+        # 求出树中所有从根节点到叶子节点的路径，注意递归终止条件是到叶子节点，而当整棵树所有叶子节点都
+        # 递归遍历完时程序结束
+        # 从根节点出发，每遍历到一个非叶结点都记录下来，当递归到叶子节点时，拼接形成一条路径
+        # 每次递归返回时，要丢掉前一次递归的结点
+        res = []  # 存放所有路径
+        temp = []  # 存放中间路径结点
+        self.__path2(root, res, temp)
         return res
-    
+
+        # 中间过程直接生成路径
+        # res = []
+        # if not root:
+        #     return res
+        # r_str = ''
+        # self.__path(root, res, r_str)
+        # return res
+
+        # 先递归到底，在递归返回中生成所有已知路径
+        # res = []
+        # if not root:
+        #     return res
+        # if not root.left and not root.right:
+        #     res.append(str(root.val))
+        #     return res
+        # left = self.binaryTreePaths(root.left)
+        # for l in left:
+        #     res.append(str(root.val) + '->' + l)
+        # right = self.binaryTreePaths(root.right)
+        # for r in right:
+        #     res.append(str(root.val) + '->' + r)
+        # return res
+
+    def __path2(self, node, res, temp):
+        if not node:
+            return
+        if not node.left and not node.right:
+            one_path = ''
+            path_node = temp + [node.val]
+            len_path = len(path_node)
+            for idx, e in enumerate(path_node):
+                if idx == len_path - 1:
+                    one_path += str(e)
+                else:
+                    one_path += str(e) + '->'
+            res.append(one_path)
+            return
+        self.__path2(node.left, res, temp + [node.val])
+        self.__path2(node.right, res, temp + [node.val])
+
     def __path(self, node, res, r_str):
         if not node.left and not node.right:
             res.append(r_str + str(node.val))
+            return
         r_str += (str(node.val) + '->')
         if node.left:
             self.__path(node.left, res, r_str)
