@@ -1,9 +1,9 @@
 # Definition for a binary tree node.
-# class TreeNode:
-#     def __init__(self, x):
-#         self.val = x
-#         self.left = None
-#         self.right = None
+class TreeNode:
+    def __init__(self, x):
+        self.val = x
+        self.left = None
+        self.right = None
 
 class Solution:
     def sumNumbers(self, root):
@@ -11,16 +11,27 @@ class Solution:
         :type root: TreeNode
         :rtype: int
         """
-        rec = self.__nn(root)
-        summ = 0
-        for rr in rec:
-            len_rr = len(rr)
-            ss = 0
-            for idx, e in enumerate(rr):
-                ss += e * 10 ** (len_rr-1-idx)
-            summ += ss
-        return summ
-        
+
+        # 给定一个二叉树，它的每个结点都存放一个 0-9 的数字，每条从根到叶子节点的
+        # 路径都代表一个数字。计算从根到叶子节点生成的所有数字之和。
+        # 言下之意就是找到所有根到叶子节点所形成的路径，然后将每条路径生成一个十进制数，然后求和
+        # 显然用递归啦，注意，递归终止条件仍然是到叶子节点当前递归停止
+        num_list = []  # 存放每条路径生成的数
+        temp = []  # 路径的中间结果
+        self.__sum_numbers(root, num_list, temp)
+        return sum(num_list)
+
+        # 先递归到底，再递归返回时生成路径数据
+        # rec = self.__nn(root)
+        # summ = 0
+        # for rr in rec:
+        #     len_rr = len(rr)
+        #     ss = 0
+        #     for idx, e in enumerate(rr):
+        #         ss += e * 10 ** (len_rr-1-idx)
+        #     summ += ss
+        # return summ
+
     def __nn(self, node):
         res = []
         if not node:
@@ -35,3 +46,16 @@ class Solution:
         for r in right:
             res.append([node.val] + r)
         return res
+
+    def __sum_numbers(self, node, num_list, temp):
+        if not node:
+            return
+        if not node.left and not node.right:
+            summ = 0
+            order = len(temp)
+            for idx, e in enumerate(temp):
+                summ += e * 10 ** (order - idx)
+            summ += node.val
+            num_list.append(summ)
+        self.__sum_numbers(node.left, num_list, temp + [node.val])
+        self.__sum_numbers(node.right, num_list, temp + [node.val])
