@@ -1,0 +1,76 @@
+# Definition for a binary tree node.
+class TreeNode:
+    def __init__(self, x):
+        self.val = x
+        self.left = None
+        self.right = None
+
+
+class Solution:
+    def deleteNode(self, root, key):
+        """
+        :type root: TreeNode
+        :type key: int
+        :rtype: TreeNode
+        """
+        # 删除二叉树中值为key的结点，要求保证删除后树仍然满足二叉搜索树的性质
+        # 首先，确保树中存在值为key的结点
+        if not self.__contain(root, key):
+            return root
+        return self.__delete_node(root, key)
+
+    def __contain(self, node, key):
+        '''
+        以node为根的二叉树中是否包含值为key的结点
+        :param node: 根节点
+        :param key: 目标值
+        :return: 包含为True，否则为False
+        '''
+        if not node:
+            return False
+        if node.val == key:
+            return True
+        if node.val < key:
+            return self.__contain(node.right, key)
+        if node.val > key:
+            return self.__contain(node.left, key)
+
+    def __delete_node(self, node, key):
+        # 首先找到要删除的结点
+        if node.val < key:
+            node.right = self.__delete_node(node.right, key)
+        elif node.val > key:
+            node.left = self.__delete_node(node.left, key)
+        else:
+            # 其次，判断待删除结点是否有左右子树
+            # 无左子树，直接删除，并返回其右子树的头结点
+            if not node.left:
+                right_tree = node.right
+                node.right = None
+                del node
+                return right_tree
+            # 无右子树，直接删除，并返回其左子树的头结点
+            if not node.right:
+                left_tree = node.left
+                node.left = None
+                del node
+                return left_tree
+            # 既有左子树，又有右子树，则待删除结点应该是其左子树的最大值结点，
+            # 或是其右子树的最小值结点
+            successor = self.__minimum(node.right)
+            successor.right = self.__delete_node(node.right, successor.val)
+            successor.left = node.left
+            node.left = node.right = None
+            del node
+            return successor
+        return node
+
+    def __minimum(self, node):
+        '''
+        返回二叉搜索树的最小值结点
+        :param node: 根节点
+        :return: 二叉搜索树的最小值结点
+        '''
+        if node.left:
+            return self.__minimum(node.left)
+        return node
