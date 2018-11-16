@@ -1,0 +1,39 @@
+# Definition for a binary tree node.
+class TreeNode:
+    def __init__(self, x):
+        self.val = x
+        self.left = None
+        self.right = None
+
+
+class Solution:
+    def pathSum(self, root, sum):
+        """
+        :type root: TreeNode
+        :type sum: int
+        :rtype: int
+        """
+        # 找出二叉树中路径和等于给定数值的路径总数。路径不需要从根节点开始，也不需要在叶子节点结束，
+        # 但是路径方向必须是向下的（只能从父节点到子节点）。
+        # 本题不要求路径起点是根节点，故表明在递归过程中某一个结点可以被选择（包含在当前路径中），也可以不包含在当前路径中
+        # 也不要求路径起点是叶结点，表明无须递归到叶结点才完成当前递归
+        # 故单次递归终止条件是当前节点为None
+        if not root:
+            return 0
+        path_num = self.__find_path(root, sum)  # 情况一：当前考虑的路径包含结点root
+        # 情况二：当前路径不包含结点root
+        path_num += self.pathSum(root.left, sum)
+        path_num += self.pathSum(root.right, sum)
+        return path_num
+
+    def __find_path(self, node, summ):
+        if not node:
+            return 0
+        temp = 0  # 当前结点下可能有多条满足要求的路径
+        if node.val == summ:
+            # 找到了一条满足要求的路径
+            temp += 1
+        # 因为结点值可以为负数，故仍然需要往下递归
+        temp += self.__find_path(node.left, summ - node.val)
+        temp += self.__find_path(node.right, summ - node.val)
+        return temp
