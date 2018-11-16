@@ -1,0 +1,29 @@
+# Definition for a binary tree node.
+class TreeNode:
+    def __init__(self, x):
+        self.val = x
+        self.left = None
+        self.right = None
+
+
+class Solution:
+    def lowestCommonAncestor(self, root, p, q):
+        """
+        :type root: TreeNode
+        :type p: TreeNode
+        :type q: TreeNode
+        :rtype: TreeNode
+        """
+        # 给定一个二叉搜索树, 找到该树中两个指定节点的最近公共祖先。百度百科中最近公共祖先的定义为：“对于有根树 T
+        # 的两个结点 p、q，最近公共祖先表示为一个结点 x，满足 x 是 p、q 的祖先且 x 的深度尽可能大
+        # （一个节点也可以是它自己的祖先）。”
+        # 即，若当前结点的值均大于p,q的值，则递归当前节点的左子树；若当前结点的值均小于p,q的值，则递归当前节点的右子树
+        # 若当前结点的值大于等于p的值，而大于q的值，或大于等于q的值，而大于p的值，则当前节点就是公共祖先
+        # 若当前结点的值小于等于p的值，而小于q的值，或小于等于q的值，而小于p的值，则当前节点就是公共祖先
+        if not root:
+            return None
+        if p.val < root.val and q.val < root.val:
+            return self.lowestCommonAncestor(root.left, p, q)
+        if p.val > root.val and q.val > root.val:
+            return self.lowestCommonAncestor(root.right, p, q)
+        return root
