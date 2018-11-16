@@ -1,0 +1,49 @@
+# Definition for a binary tree node.
+class TreeNode:
+    def __init__(self, x):
+        self.val = x
+        self.left = None
+        self.right = None
+
+
+class Solution:
+    def isValidBST(self, root):
+        """
+        :type root: TreeNode
+        :rtype: bool
+        """
+        '''
+        给定一个二叉树，判断其是否是一个有效的二叉搜索树。
+        一个二叉搜索树具有如下特征：
+            节点的左子树只包含小于当前节点的数。
+            节点的右子树只包含大于当前节点的数。
+            所有左子树和右子树自身必须也是二叉搜索树。
+        '''
+        # 思路：递归到底，叶结点肯定是二叉搜索树，或空树肯定是二叉搜索树
+        # 递归中判断当前结点作为根结点的二叉树是否是二叉搜索树
+        if not root:
+            return True
+        if not root.left and not root.right:
+            return True
+        # 判断当前节点值是否大于其左子树所有结点值
+        if not self.__compare_left(root.val, root.left):
+            return False
+        # 判断当前节点值是否小于其右子树所有结点值
+        if not self.__compare_right(root.val, root.right):
+            return False
+        # 判断当前结点作为根节点的左右子树是否也都是二叉搜索树
+        return self.isValidBST(root.left) and self.isValidBST(root.right)
+
+    def __compare_left(self, val, node):
+        if not node:
+            return True
+        if node.val >= val:
+            return False
+        return self.__compare_left(val, node.left) and self.__compare_left(val, node.right)
+
+    def __compare_right(self, val, node):
+        if not node:
+            return True
+        if node.val <= val:
+            return False
+        return self.__compare_right(val, node.left) and self.__compare_right(val, node.right)
