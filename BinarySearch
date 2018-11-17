@@ -1,0 +1,56 @@
+'''
+如何正确的书写一个程序，以二分查找法为例
+首先，二分查找法应用的前提是：在有序数组/列表中查找相应的值是否存在，
+存在，则返回其索引，不存在返回-1
+二分查找法思路很简单：从有序列表中间位置开始比较，如果相等，则已经找到，返回mid索引即可，
+如果小于，则在列表的前半部分查找，同样遵循二分查找思路，而大于则在后半部分找
+正确书写程序要点：
+1、计算中间值索引：mid = (left + right) // 2，这是有可能发生数据溢出的（和超出整数范围）
+应该写成：mid = left + (right - left) // 2
+2、循环判断条件：如果假定列表索引范围为[left, right]，那么循环判断条件为：left <= right
+而如果是[left, right)，则应该是：left < right
+3、若是递归写法，递归终止条件也应该类似2一样分情况处理
+'''
+
+
+def binary_search(a_list, val):
+    if not a_list:
+        return -1
+    left = 0
+    right = len(a_list) - 1
+    while left <= right:
+        mid = left + (right - left) // 2
+        if a_list[mid] == val:
+            return mid
+        elif a_list[mid] > val:
+            right = mid - 1
+        else:
+            left = mid + 1
+    return -1
+
+
+def __binary_search(a_list, val, left, right):
+    if left > right:
+        return -1
+    mid = left + (right - left) // 2
+    if a_list[mid] == val:
+        return mid
+    elif a_list[mid] > val:
+        return __binary_search(a_list, val, left, mid -1)
+    else:
+        return __binary_search(a_list, val, mid + 1, right)
+
+
+def binary_search_recursion(a_list, val):
+    if not a_list:
+        return -1
+    left = 0
+    right = len(a_list) - 1
+    return __binary_search(a_list, val, left, right)
+
+
+if __name__ == "__main__":
+    a_list = [i * i for i in range(20)]
+    # idx = binary_search(a_list, 3 * 3)
+    idx = binary_search_recursion(a_list, 3 * 3)
+    print(idx)
