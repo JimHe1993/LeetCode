@@ -4,8 +4,8 @@ class Solution:
         :type nums: List[int]
         :rtype: void Do not return anything, modify nums in-place instead.
         """
-        if not nums:
-            return
+        # if not nums:
+        #     return
         # 思路一：先放非零元素，再赋值0
         # i = j = 0
         # while j < len(nums):
@@ -16,19 +16,18 @@ class Solution:
         # while i < j:
         #     nums[i] = 0
         #     i += 1
-        
-        # 一边比较，一边交换。[0...k)是非零元素，[k...i)是0
-        k = 0
-        i = 0
-        while i < len(nums):
-            while i < len(nums) and nums[i] == 0:
-                i += 1
-            if i == len(nums):
-                break
-            if i == k:
-                k += 1
-                i += 1
-            else:
-                nums[k], nums[i] = nums[i], nums[k]
-                k += 1
-                i += 1
+
+        # 给定一个数组 nums，编写一个函数将所有 0 移动到数组的末尾，同时保持非零元素的相对顺序。
+        # 思路：设置两个指针p, q，p指向第一个0，q往后遍历，当前q所指向的值是0，q += 1，
+        # 当前q指向非0，nums[p], nums[q] = nums[q], nums[p], p += 1, q += 1
+        if not nums:
+            return
+        len_nums = len(nums)
+        # [0, p) != 0, [p, q) == 0
+        p = q = 0
+        while q < len_nums:
+            if nums[q] != 0:
+                if p != q:
+                    nums[p], nums[q] = nums[q], nums[p]
+                p += 1
+            q += 1
