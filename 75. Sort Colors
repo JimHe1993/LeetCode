@@ -1,23 +1,79 @@
+# class Solution:
+#     def sortColors(self, nums):
+#         """
+#         :type nums: List[int]
+#         :rtype: void Do not return anything, modify nums in-place instead.
+#         """
+#         if not nums:
+#             return
+#         # 3路快排——[0...l) == 0, [l...m) == 1, [m...r)未探索, [r...len(nums)) == 2
+#         l = 0
+#         m = 0
+#         r = len(nums)
+#         while m < r:
+#             if nums[m] == 1:
+#                 m += 1
+#             elif nums[m] < 1:
+#                 nums[l], nums[m] = nums[m], nums[l]
+#                 l += 1
+#                 m += 1
+#             else:
+#                 nums[r-1], nums[m] = nums[m], nums[r-1]
+#                 r -= 1
+
+import random
+
+
 class Solution:
     def sortColors(self, nums):
         """
         :type nums: List[int]
         :rtype: void Do not return anything, modify nums in-place instead.
         """
+        '''
+        给定一个包含红色、白色和蓝色，一共 n 个元素的数组，原地对它们进行排序，
+        使得相同颜色的元素相邻，并按照红色、白色、蓝色顺序排列。
+        此题中，使用整数 0、 1 和 2 分别表示红色、白色和蓝色。
+        也即，整个数组是由少量重复元素组成，也就是要对重复元素数组排序
+        直观的想法就是利用哈希表或字典数据结构，统计每个数组中出现元素的频次
+        之后遍历填充元数组便可排序成功
+        但是，这种方法需要额外的空间，即O(n)的时间复杂度，O(m)的空间复杂度
+        要在O(1)空间尽快完成排序，快速排序首当其冲，又因为待排序数组元素重复性很高，
+        故可以选择三路快排
+        '''
         if not nums:
             return
-        # 3路快排——[0...l) == 0, [l...m) == 1, [m...r)未探索, [r...len(nums)) == 2
-        l = 0
-        m = 0
-        r = len(nums)
-        while m < r:
-            if nums[m] == 1:
-                m += 1
-            elif nums[m] < 1:
-                nums[l], nums[m] = nums[m], nums[l]
-                l += 1
-                m += 1
+        # 假定对[left, right]范围内的数据进行快排
+        left = 0
+        right = len(nums) - 1
+        self.__quick_sort_3ways(nums, left, right)
+
+    def __quick_sort_3ways(self, nums, left, right):
+        if left > right:
+            return
+        left_idx, right_idx = self.__partition(nums, left, right)
+        self.__quick_sort_3ways(nums, left, left_idx)
+        self.__quick_sort_3ways(nums, right_idx, right)
+
+    def __partition(self, nums, left, right):
+        # 随机化处理
+        random_idx = random.randint(left, right)
+        nums[left], nums[random_idx] = nums[random_idx], nums[left]
+        target = nums[left]
+        # [left + 1, i] < target, (i, j) = target, [k, right] > target
+        i = left
+        j = left + 1
+        k = right + 1
+        while j < k:
+            if nums[j] < target:
+                i += 1
+                nums[i], nums[j] = nums[j], nums[i]
+                j += 1
+            elif nums[j] > target:
+                k -= 1
+                nums[j], nums[k] = nums[k], nums[j]
             else:
-                nums[r-1], nums[m] = nums[m], nums[r-1]
-                r -= 1
-            
+                j += 1
+        nums[left], nums[i] = nums[i], nums[left]
+        # 返回小于target的最大索引值和大于target的最小索引值
+        return i - 1, k
