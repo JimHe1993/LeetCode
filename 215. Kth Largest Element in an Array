@@ -1,4 +1,6 @@
 import random
+
+
 class Solution:
     def findKthLargest(self, nums, k):
         """
@@ -9,21 +11,22 @@ class Solution:
         if not nums:
             return -1
         # 快速排序partition过程确定一个元素的最终位置
-        return self.__quick_sort(nums, k, 0, len(nums)-1)
-    
+        return self.__quick_sort(nums, k, 0, len(nums) - 1)
+
     def __quick_sort(self, nums, k, left, right):
         if left > right:
             return -1
         # partition过程
         fixed_idx = self.__partition(nums, left, right)
-        if fixed_idx == len(nums) - k:
+        if fixed_idx == len(nums) - k:  # 判断是否已经找到
             return nums[len(nums) - k]
-        elif fixed_idx < len(nums) - k:
-            return self.__quick_sort(nums, k, fixed_idx+1, right)
-        else:
-            return self.__quick_sort(nums, k, left, fixed_idx-1)
-    
+        elif fixed_idx < len(nums) - k:  # 当前索引值小了，在右半区找
+            return self.__quick_sort(nums, k, fixed_idx + 1, right)
+        else:  # 当前索引值大了，在左半区找
+            return self.__quick_sort(nums, k, left, fixed_idx - 1)
+
     def __partition(self, nums, left, right):
+        # 随机化处理
         random.seed(0)
         random_idx = random.randint(left, right)
         nums[left], nums[random_idx] = nums[random_idx], nums[left]
@@ -33,7 +36,7 @@ class Solution:
         j = left + 1
         while j <= right:
             if nums[j] < label_e:
-                nums[i+1], nums[j] = nums[j], nums[i+1]
+                nums[i + 1], nums[j] = nums[j], nums[i + 1]
                 i += 1
             j += 1
         nums[left], nums[i] = nums[i], nums[left]
