@@ -7,11 +7,32 @@ class Solution:
         :type n: int
         :rtype: void Do not return anything, modify nums1 in-place instead.
         """
-        # 归并排序merge过程
+
+        # if not nums1 or not nums2:
+        #     return 
+        # # 其实就是归并过程，也就自然的需要额外的空间
+        # i = j = k = 0
+        # aux = nums1[:]
+        # while k < m + n:
+        #     if i >= m and j < n:  # 边界判断
+        #         nums1[k] = nums2[j]
+        #         j += 1
+        #     elif j >= n and i < m:  # 边界判断
+        #         nums1[k] = aux[i]
+        #         i += 1
+        #     elif aux[i] <= nums2[j]:
+        #         nums1[k] = aux[i]
+        #         i += 1
+        #     else:
+        #         nums1[k] = nums2[j]
+        #         j += 1
+        #     k += 1
+
+        # 归并排序merge过程，从后向前避免额外空间
         if nums1 and nums2:
-            end_idx = m+n-1
-            i = m-1
-            j = n-1
+            end_idx = m + n - 1
+            i = m - 1
+            j = n - 1
             while i >= 0 and j >= 0:
                 if nums2[j] > nums1[i]:
                     nums1[end_idx] = nums2[j]
