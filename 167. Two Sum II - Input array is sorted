@@ -1,19 +1,72 @@
-class Solution:
+class Solution(object):
     def twoSum(self, numbers, target):
         """
         :type numbers: List[int]
         :type target: int
         :rtype: List[int]
         """
+        '''
+        给定一个已按照升序排列的有序数组，找到两个数使得它们相加之和等于目标数。函数返回这两个下标值
+        index1 和 index2，其中 index1 必须小于 index2。返回的下标值（index1 和 index2）不是从零开始的，应该+1
+        每个输入只对应唯一的答案，而且你不可以重复使用相同的元素。
+        友情提示：
+        1、若题目本身没有解，该如何处理？这需要询问面试官，本题存在唯一解，也就说明，若是有多个解，可能要求
+        返回最小解、任意解、全返回等等，需要和面试官沟通。
+        '''
         if not numbers:
             return None
-        i = 0
-        j = len(numbers) - 1
-        while i < j:
-            if numbers[i] + numbers[j] == target:
-                return [i+1, j+1]
-            elif numbers[i] + numbers[j] < target:
-                i += 1
+        len_num = len(numbers)
+        if len_num < 2:
+            return None
+        # 思路一：暴力解法——就是在numbers中找两个数，使其和为target，两层循环搞定
+        # 但是这时的时间复杂度为O(n^2)，对于10000及以上的数据规模是行不通的，也无法通过LeetCode
+        # for i in range(len_num - 1):
+        #     for j in range(i + 1, len_num):
+        #         if (numbers[i] + numbers[j]) == target:
+        #             return [i + 1, j + 1]
+        # return None
+
+        # 思路二：题目给出numbers是有序的，那么我们在假定一个数后，寻找另一个数就可以使用二分查找法了
+        # 该解法的时间复杂度为：O(nlog(n))
+        # for i in range(len_num - 1):
+        #     val = target - numbers[i]
+        #     if val < numbers[i + 1]:
+        #         return None
+        #     idx = self.__binary_search(numbers, i + 1, len_num - 1, val)
+        #     if idx != -1:
+        #         return [i + 1, idx + 1]
+        # return None
+
+        # 思路三：对撞指针——因为数组是升序，所以，设置头尾两个指针，每次取头尾两个指针的加和，
+        # 若等于target，则程序停止并返回结果，若小于target，则移动左指针，否则移动右指针。
+        # 当左右指针相等时，程序停止，并返回空解。
+        # 该解法时间复杂度为：O(n)
+        p = 0
+        q = len_num - 1
+        while p < q:  # 由于元素不能重复利用，所以不能取等号
+            summ = numbers[p] + numbers[q]
+            if summ == target:
+                return [p + 1, q + 1]
+            elif summ < target:
+                p += 1
             else:
-                j -= 1
+                q -= 1
         return None
+
+    def __binary_search(self, numbers, left, right, val):
+        while left <= right:
+            mid = left + (right - left) // 2
+            if numbers[mid] == val:
+                return mid
+            elif numbers[mid] < val:
+                left = mid + 1
+            else:
+                right = mid - 1
+        return -1
+
+
+if __name__ == "__main__":
+    numbers = [2, 7, 10, 11]
+    target = 9
+    solve = Solution()
+    print(solve.twoSum(numbers, target))
