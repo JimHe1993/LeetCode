@@ -4,16 +4,18 @@ class Solution:
         :type s: str
         :rtype: str
         """
-        if not s:
-            return s
+        # 反转字符串
+        # 由于Python中字符串是序列，具有切片操作，所以可以直接切片返回其逆序
+        if s is None:  # 由于 "" 在逻辑判定中仍然被判定为None，所以不能写成：if not s: 这是一个坑，勿踩
+            return None
+        # 注意对空字符的字符串特殊处理一下
         len_s = len(s)
+        if len_s == 0:
+            return ""
+        # return s[::-1]
+
+        # 如果将字符串看成是字符列表，由于字符串是不可变类型，所以需要转为列表
         s_list = list(s)
-        # i = 0
-        # j = len(s)-1
-        # while i < j:
-        #     s_list[i], s_list[j] = s_list[j], s_list[i]
-        # return ''.join(s_list) # 超时了
-        
         for i in range(0, len_s//2):
             s_list[i], s_list[len_s-i-1] = s_list[len_s-i-1], s_list[i]
         return ''.join(s_list)
