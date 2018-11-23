@@ -4,27 +4,41 @@ class Solution:
         :type s: str
         :rtype: bool
         """
+        '''
+        验证给定的字符串是否是回文串——关于字符串索引中值对称的字符串。
+        友情提示：
+        1、本题只考虑字母和数字，且忽略字母的大小写
+        2、空字符串定义为有效回文串
+        '''
+        # 思路：使用双指针，一前p,一后q，当前指针若指向的是非字母或数字字符，则跳过，
+        # 当p和q都指向字母或数字字符时，忽略大小写比较两者是否相同，若不相同，则直接返回False
+        # 否则 p += 1，q -= 1。当遍历完整个字符串，返回True
         if not s:
             return True
-        # 解法一：遍历比较
+        len_s = len(s)
+        if len_s < 2:
+            return True
+        p = 0
+        q = len_s - 1
+        while p <= q:
+            while p <= q and not s[p].isalnum():  # 跳过非字母或数字字符
+                p += 1
+            while p <= q and not s[q].isalnum():  # 跳过非字母或数字字符
+                q -= 1
+            if p > q:
+                break
+            if s[q].lower() == s[p].lower():  # 忽略大小写
+                p += 1
+                q -= 1
+            else:
+                return False
+        return True
+
+        # 解法：遍历比较
+        # if not s:
+        #     return True
         # s_list = []
         # for i in range(len(s)):
         #     if s[i].isalnum():
         #         s_list.append(s[i].lower())
         # return s_list == s_list[::-1]
-            
-        # 解法二：对撞指针
-        i = 0
-        j = len(s) - 1
-        while i <= j:
-            while i <= j and not s[i].isalnum():
-                i += 1
-            while i <= j and not s[j].isalnum():
-                j -= 1
-            if i > j:
-                break
-            if s[i].lower() != s[j].lower():
-                return False
-            i += 1
-            j -= 1
-        return True
