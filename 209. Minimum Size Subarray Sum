@@ -9,9 +9,9 @@
 #         给定一个含有 n 个正整数的数组和一个正整数 s ，找出该数组中满足其和 ≥ s 的
 #         长度最小的连续子数组。存在返回最小长度，不存在符合条件的连续子数组，返回 0。
 #         '''
-#         # 本题首先明确连续子数组的概念，连续子数组指的是索引连续的子区间，包含原数组本身
+#         # 本题首先明确连续子数组的概念，连续子数组此题指的是索引连续的子区间，包含原数组本身
 #         # 那么，既然要求连续子区间，自然需要连续取值，而可以取值的前提条件应该是当前连续
-#         # 子区间元素和小于等于s。等于s时，记录下当前连续子区间的长度，以便选取最小长度，
+#         # 子区间元素和小于s。大于等于s时，记录下当前连续子区间的长度，以便选取最小长度，
 #         # 同时删除当前连续子区间左边界，并囊括下一个索引值，若索引值越界，则遍历完成，否则继续循环
 #         # 小于s时，继续扩大连续子区间范围，即囊括下一个索引值，若索引值越界，则遍历完成，否则继续循环
 #         # 若在纳入新的元素后导致和大于s，则记录下当前连续子区间的长度，以便选取最小长度，
@@ -40,9 +40,8 @@
 #             return 0
 #         return min_len
 
-# 上面解法超时，主要由于切片操作和求和操作，下面为优化解法
 
-
+# 上面解法超时，主要由于大量重复求和，下面为优化解法
 class Solution:
     def minSubArrayLen(self, s, nums):
         """
@@ -50,23 +49,61 @@ class Solution:
         :type nums: List[int]
         :rtype: int
         """
-        # 维护一个[i ... j]的滑动窗口，首先保证窗口内元素和>=s，然后看当前窗口长度
-        i = 0
-        j = -1
-        summ = 0
-        lenn = len(nums) + 1
-        while i < len(nums):  # 当窗口内仍然有元素时，可能解依然存在
-            if j + 1 < len(nums) and summ < s:
-                j += 1
-                summ += nums[j]
-            else:
-                summ -= nums[i]
-                i += 1
-            if summ >= s:  # 每次窗口内元素发生变动，判读是否满足题目要求
-                lenn = min(lenn, j - i + 1)
-        if lenn == len(nums) + 1:
+        # 优化方法：每次记录下当前连续子区间和，当和大于等于s时，删除元素，小于s时，
+        # 添加元素
+        if not nums:
             return 0
-        return lenn
+        p = q = 0
+        len_nums = len(nums)
+        min_len = len_nums + 1  # 初始化最小连续子区间长度
+        summ = nums[0]
+        while q < len_nums:
+            if summ >= s:
+                if min_len > q - p + 1:
+                    min_len = q - p + 1
+                summ -= nums[p]
+                p += 1
+                while p <= q:
+                    if summ >= s:
+                        if min_len > q - p + 1:
+                            min_len = q - p + 1
+                        summ -= nums[p]
+                        p += 1
+                    else:
+                        break
+            q += 1
+            if q < len_nums:
+                summ += nums[q]
+        if min_len == len_nums + 1:
+            return 0
+        return min_len
+
+
+# 简化写法
+# class Solution:
+#     def minSubArrayLen(self, s, nums):
+#         """
+#         :type s: int
+#         :type nums: List[int]
+#         :rtype: int
+#         """
+#         # 维护一个[i ... j]的滑动窗口，首先保证窗口内元素和>=s，然后看当前窗口长度
+#         i = 0
+#         j = -1
+#         summ = 0
+#         lenn = len(nums) + 1
+#         while i < len(nums):  # 当窗口内仍然有元素时，可能解依然存在
+#             if j + 1 < len(nums) and summ < s:
+#                 j += 1
+#                 summ += nums[j]
+#             else:
+#                 summ -= nums[i]
+#                 i += 1
+#             if summ >= s:  # 每次窗口内元素发生变动，判读是否满足题目要求
+#                 lenn = min(lenn, j - i + 1)
+#         if lenn == len(nums) + 1:
+#             return 0
+#         return lenn
 
 
 if __name__ == "__main__":
