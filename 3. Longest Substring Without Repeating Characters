@@ -4,37 +4,106 @@ class Solution:
         :type s: str
         :rtype: int
         """
+        '''
+        给定一个字符串，请你找出其中不含有重复字符的 最长子串 的长度。
+        抽象建模：其实问题抽象出来就是在长串中找子串，所以首先明确子串的定义
+        子串：索引值连续的字符子串，即不能是子序列。
+        所以，问题极好解决，为了找到目标的子串，就依据当前需求的子串要求，从
+        长串里面框就行，拟人过程就是用眼睛扫描长串，然后确定左右边界从而框出目标子串
+        用程序实现拟人过程步骤如下：
+        1、眼睛扫描——从头开始遍历长串
+        2、眼睛框出目标串——设定双指针p和q，[p, q]表示框
+        回到本题：要找无重复字符的最长子串
+        1、首先定义好框——[p, q）表示无重复字符最长子串索引区间
+        2、扫描遍历：
+        （1）当前最长子串不包含索引q处字符，直接添加，最长子串长度加1
+        （2）当前最长子串包含索引q处字符，找到当前最长子串中重复字符的索引，
+        从该索引处截断并保留索引后的子串为新的最长子串，并添加上索引q处字符，更新最长子串及其长度
+        友情提示：
+        1、长串为None，返回0
+        2、长串长度为0或1，直接返回长串长度
+        '''
+        '''
+        # 版本一：直接获取最长无重复子串
         if not s:
             return 0
-        # 维护一个滑动窗口[i ... j]，使得其间没有重复字符，然后探索j+1位置，若j+1位置的字符与窗口中的某一个字符重复，则更新无重复的窗口
-        # freq = [0]*256
-        # i = 0
-        # j = -1
-        # len_subStr = 0
-        # while i < len(s):
-        #     if j+1 < len(s) and freq[ord(s[j+1])] == 0:
-        #         j += 1
-        #         freq[ord(s[j])] += 1
-        #     else:
-        #         freq[ord(s[i])] -= 1
-        #         i += 1
-        #     len_subStr = max(len_subStr, j-i+1)
-        # return len_subStr
-        
-        # 维护一个[i ... j)的窗口，保证其内没有重复的字符
-        i = 0
-        j = 0
-        sub_s = ''
-        lenn = 0
-        while j < len(s):  # 当遍历完整个字符串，说明已经探索了所有相对最长的连续子串
-            if s[j] not in sub_s:
-                sub_s += s[j]
+        len_s = len(s)
+        if len_s < 2:
+            return len_s
+        q = 1
+        sub_str = s[0]
+        max_len_sub_str = 1
+        while q < len_s:
+            if s[q] in sub_str:
+                idx = sub_str.index(s[q])
+                sub_str = sub_str[idx+1:]
+            sub_str += s[q]
+            len_sub_str = len(sub_str)
+            if max_len_sub_str < len_sub_str:
+                max_len_sub_str = len_sub_str
+            q += 1
+        return max_len_sub_str
+        '''
+        # 上述代码每次做字符串+操作，由于字符串是不可变类型，每次都得生成新的字符串常量，
+        # 很影响时间效率
+        # 优化一：使用之前提到的双指针，利用前后指针表示子串的首尾边界，进而表示当前子串
+        # 为了快速判断当前访问字符是否与当前最长子串中字符重复，引入哈希表
+        # 哈希表构造：默认当前问题长串中只包含ASCⅡ码字符，故使用列表做哈希表
+        if not s:
+            return 0
+        len_s = len(s)
+        if len_s < 2:
+            return len_s
+        p = 0
+        q = 1
+        max_len_sub_str = q - p
+        freq = [0] * 128
+        freq[ord(s[0])] = 1  # 长串的第一个字符一定是不重复的
+        while q < len_s:
+            if freq[ord(s[q])] == 0:
+                freq[ord(s[q])] = 1
+                q += 1
             else:
-                idx_i = sub_s.find(s[j])
-                sub_s = sub_s[idx_i+1:]
-                sub_s += s[j]
-                i = idx_i + 1
-            lenn = max(lenn, len(sub_s))
-            j += 1
-        return lenn
-        
+                sub_str = s[p: q]
+                idx = sub_str.index(s[q])
+                for i in range(p, p + idx + 1):
+                    freq[ord(s[i])] = 0
+                p = p + idx + 1
+                freq[ord(s[q])] = 1
+                q += 1
+            if max_len_sub_str < q - p:
+                max_len_sub_str = q - p
+        return max_len_sub_str
+
+
+#简化版本
+# class Solution:
+#     def lengthOfLongestSubstring(self, s):
+#         """
+#         :type s: str
+#         :rtype: int
+#         """
+#         if not s:
+#             return 0
+#         # 维护一个滑动窗口[i ... j]，使得其间没有重复字符，然后探索j+1位置，若j+1位置的字符与窗口中的某一个字符重复，则更新无重复的窗口
+#         # freq = [0]*256
+#         # i = 0
+#         # j = -1
+#         # len_subStr = 0
+#         # while i < len(s):
+#         #     if j+1 < len(s) and freq[ord(s[j+1])] == 0:
+#         #         j += 1
+#         #         freq[ord(s[j])] += 1
+#         #     else:
+#         #         freq[ord(s[i])] -= 1
+#         #         i += 1
+#         #     len_subStr = max(len_subStr, j-i+1)
+#         # return len_subStr
+
+
+if __name__ == "__main__":
+    solve = Solution()
+    ss = "abcabcbb"
+    # ss = "bbbbb"
+    # ss = "pwwkew"
+    print(solve.lengthOfLongestSubstring(ss))
