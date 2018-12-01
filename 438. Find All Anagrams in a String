@@ -1,10 +1,66 @@
+# class Solution:
+#     def findAnagrams(self, s, p):
+#         """
+#         :type s: str
+#         :type p: str
+#         :rtype: List[int]
+#         """
+#         '''
+#         找到长串s中所有子串p的字母异位词。字母异位词指字母相同，但排列不同的字符串。
+#         抽象出来就是简单的模式识别/模式匹配问题。
+#         要找出所有匹配p的s中的子串，直观做法就是从头开始遍历。
+#         做模式匹配：
+#         1、提取并准备匹配规则：所有子串与p字符相同，字符所在顺序可以不同
+#         2、遍历方法：每次应该按索引顺序，截取长度为len(p)的子串做模式识别
+#         '''
+#         if not s or not p:
+#             return []
+#         len_s = len(s)
+#         len_p = len(p)
+#         if len_s < len_p:
+#             return []
+#         # 待识别子串窗口：[i, j)
+#         i = 0
+#         j = len_p
+#         res = []
+#         dict_p = {}
+#         for pp in p:
+#             if pp not in dict_p:
+#                 dict_p[pp] = 1
+#             else:
+#                 dict_p[pp] += 1
+#         while j < len_s + 1:
+#             sub_str = s[i: j]
+#             dict_p_copy = dict_p.copy()
+#             for ss in sub_str:
+#                 if ss in dict_p_copy:
+#                     dict_p_copy[ss] -= 1
+#                     if dict_p_copy[ss] == 0:
+#                         del dict_p_copy[ss]
+#                 else:
+#                     break
+#             if len(dict_p_copy) == 0:
+#                 res.append(i)
+#             i += 1
+#             j += 1
+#         return res
+
+
+'''
+上述代码超时了！！！原因何在？
+1、待匹配子串有很大一部分重叠，从而带来了大量的重复比较与删除操作
+2、当遇到异常字符时，应该从异常字符的下一个字符开始判断，避免大量的无效判断
+'''
+
+
+# 优化版本
 class Solution:
     def findAnagrams(self, s, p):
         """
         :type s: str
         :type p: str
         :rtype: List[int]
-        """        
+        """
         res = []
         if not s or not p:
             return res
@@ -18,10 +74,10 @@ class Solution:
         j = len(p) - 1
         flag = False
         while j < len(s):
-            sub_s = s[i:j+1]  # 截取子串
+            sub_s = s[i:j + 1]  # 截取子串
             dict_p_copy = dict_p.copy()
             if flag:  # 上一次成功判断，则本次只需判断新加入的字符是否符合要求
-                if s[i-1] == s[j]:
+                if s[i - 1] == s[j]:
                     dict_p_copy.clear()  # 符合要求则添加
             else:
                 for ss in sub_s:
@@ -43,4 +99,8 @@ class Solution:
             else:
                 flag = False
         return res
-            
+
+
+if __name__ == "__main__":
+    solve = Solution()
+    print(solve.findAnagrams("cbaebabacd", "abc"))
