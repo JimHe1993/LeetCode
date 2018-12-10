@@ -5,6 +5,10 @@ class Solution:
         :type nums2: List[int]
         :rtype: List[int]
         """
+        '''
+        本题求两列表的交集，需要求出共有的元素及其对应元素个数
+        需要统计元素频次，一定得想到使用字典
+        '''
         if not nums1 or not nums2:
             return []
         dict_nums1 = {}
