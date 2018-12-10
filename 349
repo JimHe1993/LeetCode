@@ -24,3 +24,23 @@ class Solution:
             if i in set_nums2:
                 res.append(i)
         return res
+    '''
+    如果给定的是有序的数组，那么可以如何优化呢？
+    假定数组是升序排列的。由于数组的有序性，可以同时遍历两数组，
+    当当前两个索引指向的值相等时，找到了一个交集集合元素，记录下来，
+    如果当前两个索引指向的值不相等时，移动相对较小值得索引，
+    循环直到遍历完其中一个数组。
+    为了保证交集元素唯一性，首先用 set
+    核心代码：
+    i = j = 0
+    res = set()
+    while i < len(nums1) and j < len(nums2):
+        if nums1[i] == nums2[j]:
+            res.add(nums1[i])
+            i += 1
+            j += 1
+        elif nums1[i] < nums2[j]:
+            i += 1
+        else:
+            j += 1
+    '''
