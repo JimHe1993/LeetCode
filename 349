@@ -1,0 +1,26 @@
+class Solution:
+    def intersection(self, nums1, nums2):
+        """
+        :type nums1: List[int]
+        :type nums2: List[int]
+        :rtype: List[int]
+        """
+        '''
+        关于容器的小知识：
+        set: 集合，元素具有唯一性
+        dict: 字典，健具有唯一性，常用于统计频次
+        容器是用于存储数据的，好的数据存储能大大简化甚至优化代码实现
+        '''
+        '''
+        本题求两列表交集，首先交集是指共有的元素集合，并且交集集合须保证元素
+        唯一性，即，使用 set 集合过滤原列表，保证元素唯一性，然后求交集
+        '''
+        res = []
+        if not nums1 or not nums2:
+            return res
+        set_nums1 = set(nums1)
+        set_nums2 = set(nums2)
+        for i in set_nums1:
+            if i in set_nums2:
+                res.append(i)
+        return res
