@@ -4,18 +4,30 @@ class Solution:
         :type n: int
         :rtype: bool
         """
+        '''
+        编写一个算法来判断一个数是不是“快乐数”。
+        一个“快乐数”定义为：对于一个正整数，每一次将该数替换为它每个位置上的数字的平方和，
+        然后重复这个过程直到这个数变为 1，也可能是无限循环但始终变不到 1。如果可以变为 1，
+        那么这个数就是快乐数。
+        问题思路：
+        1、数的生成算法：数位权数之和，即必须分解出一个数的所有权数
+        如数867，其有三个权数：8、6、7
+        2、循环产生：权数和可以为任意数，若是1，则找到了一个“快乐数”，函数返回True
+        若是已经出现过的数，则表明进入了死循环，不可能是“快乐数”，程序break
+        若权数和还未出现过，则对当前权数和进行循环
+        '''
         if n <= 0:
             return False
-        set_n = set()
+        record = set()  # 保证集合中元素唯一性
         while True:
-            set_n.add(n)
-            sum_2 = 0
-            while n:
-                sum_2 += (n%10)**2
-                n = n // 10
-            if sum_2 == 1:
+            if n == 1:
                 return True
-            if sum_2 in set_n:
+            if n in record:
                 return False
-            n = sum_2
-                
+            else:
+                record.add(n)
+                sum = 0
+                while n:
+                    sum += (n % 10) ** 2
+                    n //= 10
+                n = sum
