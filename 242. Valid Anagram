@@ -5,9 +5,16 @@ class Solution:
         :type t: str
         :rtype: bool
         """
-        if not s or not t:
+        '''
+        本题要求判断字符串t是否是另一字符串s的字母异位词。
+        就是忽略字符串之间顺序，构建相同元素的字符串模式，
+        简言之，就是要求所有字符频率相同的字符串
+        友情提示：
+        凡是要求统计词频、或某数据，请用 字典 Dict
+        '''
+        if not s or not t:  # 空串处理
             return True
-        dict_s = {}
+        dict_s = {}  # Python3 支持的是Unicode字符集编码
         for ss in s:
             if ss not in dict_s:
                 dict_s[ss] = 1
