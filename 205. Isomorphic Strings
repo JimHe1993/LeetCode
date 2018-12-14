@@ -5,18 +5,20 @@ class Solution:
         :type t: str
         :rtype: bool
         """
+        '''
+        本题与第290题题型一致，问题建模请参考第290题
+        '''
+        '''
+        本题要求判断两字符串s和t是否是同构的，本题所谓同构即字符一一对应。
+        '''
         if not s and not t:
             return True
-        if not s and t:
-            return False
-        if s and not t:
+        if not s or not t:
             return False
         if len(s) != len(t):
             return False
-        
         dict_s_t = {}
         dict_t_s = {}
-        
         for idx, ss in enumerate(s):
             if ss not in dict_s_t:
                 if t[idx] in dict_t_s:
