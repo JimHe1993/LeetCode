@@ -1,15 +1,69 @@
+# class Solution(object):
+#     def frequencySort(self, s):
+#         """
+#         :type s: str
+#         :rtype: str
+#         """
+#         '''
+#         给定一个字符串，请将字符串里的字符按照出现的频率降序排列。
+#         题目扩展：
+#         这是现在常见的词频统计的应用的抽象简化。
+#         常见的文本词频分析首先需要进行分词，其次构建词频空间，之后利用相关
+#         机器学习方法或数据挖掘方法进行对应的文本分析，如信息主题分类、情感分析等应用
+#         算法问题扩展：
+#         1、简单的词频统计并排序
+#         2、寻找Top10或Top100的新闻主题等
+#         '''
+#         '''
+#         本问题解法：
+#         1、词频统计+暴力排序输出
+#         '''
+#         if not s:
+#             return s
+#         dict_freq_s = {}
+#         for ss in s:  # 词频统计
+#             if ss in dict_freq_s:
+#                 dict_freq_s[ss] += 1
+#             else:
+#                 dict_freq_s[ss] = 1
+#         dict_inverse = {}
+#         list_vals = []
+#         for key, val in dict_freq_s.items():  # 排序输出
+#             # print(key, type(key))
+#             # print(val, type(val))
+#             if val not in dict_inverse:
+#                 dict_inverse[val] = [key]
+#                 list_vals.append(val)
+#             else:
+#                 dict_inverse[val].append(key)
+#         list_vals.sort(reverse=True)
+#         # print(list_vals)
+#         res = ''
+#         for val in list_vals:
+#             for ch in dict_inverse[val]:
+#                 for _ in range(val):
+#                     res += ch
+#         return res
+
+
 class Solution:
-    
+    #  内部类
     class MaxHeap(object):
+        '''
+        基于列表的最大堆
+        关于堆的知识请参考相关数据结构知识，也可以参看我的
+        GitHub:https://github.com/JimHe1993，有对应的python3实现
+        '''
         def __init__(self, a_dict):
             self.data = []
             self.size = 0
             for item in a_dict.items():
+                # print(item, type(item))  # <class 'tuple'>
                 self.data.append(item)
                 self.size += 1
             for k in range((len(self.data)-2)//2, -1, -1):
                 self.shift_down(k)
-        
+
         def shift_down(self, k):
             target = self.data[k]
             while 2*k+1 < self.size:
@@ -21,7 +75,7 @@ class Solution:
                 self.data[k] = self.data[i]
                 k = i
             self.data[k] = target
-            
+
         def get_max(self):
             if self.size == 0:
                 return None
@@ -36,16 +90,16 @@ class Solution:
             del self.data[self.size]
             self.shift_down(0)
             return max_e
-    
+
     def frequencySort(self, s):
         """
         :type s: str
         :rtype: str
         """
-        # 最大堆
+        # 解法二：词频统计后构建最大堆，之后依次取出词频最大的字符
         if not s:
             return ''
-        
+
         dict_s = {}
         for ss in s:
             if ss in dict_s:
@@ -55,10 +109,15 @@ class Solution:
         max_heap = Solution.MaxHeap(dict_s)
         res = ''
         while True:
-            ee = max_heap.get_max()
+            ee = max_heap.get_max()  # 取出当前词频最大的字符
             if not ee:
                 break
             for _ in range(ee[1]):
                 res += ee[0]
         return res
-        
+
+
+if __name__ == "__main__":
+    solve = Solution()
+    # print(solve.frequencySort('ccaaa'))
+    print(solve.frequencySort('tree'))
