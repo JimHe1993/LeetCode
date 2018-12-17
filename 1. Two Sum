@@ -5,12 +5,45 @@ class Solution:
         :type target: int
         :rtype: List[int]
         """
+        '''
+        本题要求在数组中找出互斥的两元素，使其和为target
+        这是典型的查找问题：
+        1、看给定的待查列表/容器是否有序，如果有序，可以考虑二分查找
+        2、如果无序，则在弄清题意后考虑使用相关数据结构辅助查找：
+        例如：使用哈希表以借用空间换取时间，使用集合以确保查找元素的唯一性，
+        使用字典用于配对/频次查找，使用堆快速查找最大值/最小值/Top K值等
+        3、暴力解法：查找元素是否满足题目要求就是循环遍历所有元素
+        4、当然了，无序情况下可以使用排序算法先排序，再查找
+        '''
+        # 暴力解法
+        # if not nums:
+        #     return nums
+        # len_nums = len(nums)
+        # if len_nums < 2:
+        #     return None
+        # for i in range(len_nums - 1):
+        #     for j in range(i + 1, len_nums):
+        #         if nums[i] + nums[j] == target:
+        #             return [i, j]
+        # return None
+
+        # 借用字典存储每次target与当前元素的差值及其索引，只需一次遍历
+        # 注意，这里由于python3字典的底层数据结构使用的是哈希表，所以直接使用的
+        # python3封装的字典，本题也可以使用列表作为哈希表来实现
         if not nums:
-            return []
-        dict_c = {}
-        for idx, num in enumerate(nums):
-            if target - num in dict_c:
-                return [dict_c[target - num], idx]
+            return nums
+        len_nums = len(nums)
+        if len_nums < 2:
+            return None
+        dict_num = {}
+        for idx, e in enumerate(nums):
+            if e not in dict_num:
+                dict_num[target - e] = idx
             else:
-                dict_c[num] = idx
-        return []
+                return [dict_num[e], idx]
+        return None
+
+
+if __name__ == "__main__":
+    solve = Solution()
+    print(solve.twoSum([2, 7, 9, 11], 11))
