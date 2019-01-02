@@ -5,25 +5,33 @@ class Solution:
         :type t: str
         :rtype: str
         """
+        '''
+        题目要求在s中找出包含t的所有字符的最小子串。
+        1、如何保证当前遍历的子串已经全部包含t的所有字符
+        使用字典统计词频，记录字符个数
+        2、维护一个窗口[i...j]，使得该窗口包含T的所有字符，之后选择最小子串
+        '''
         if not s or not t:
             return ''
-        
+        len_s = len(s)
+        len_t = len(t)
+        if len_s < len_t:
+            return ''
         dict_t = {}
         for tt in t:
             if tt not in dict_t:
                 dict_t[tt] = 1
             else:
                 dict_t[tt] += 1
+        min_len = len_s + 1
+        index = -1
         dict_s = {}
-        s_cnt = 0
-        
-        min_len = len(s) + 1
-        idx = -1
-        # 维护一个窗口[i..j]，使得该窗口包含T所有字母
+        s_count = 0
+        # 维护一个窗口[i...j]，使得该窗口包含T的所有字符
         i = 0
         j = -1
-        while i < len(s):
-            if j + 1 < len(s) and s_cnt < len(t):
+        while i < len_s:
+            if j + 1 < len_s and s_count < len_t:
                 j += 1
                 if s[j] not in dict_s:
                     dict_s[s[j]] = 1
@@ -31,18 +39,22 @@ class Solution:
                     dict_s[s[j]] += 1
                 if s[j] in dict_t:
                     if dict_s[s[j]] <= dict_t[s[j]]:
-                        s_cnt += 1
+                        s_count += 1
             else:
-                assert s_cnt <= len(t)
-                if s_cnt == len(t) and j - i + 1 < min_len:
-                    min_len = j -i + 1
-                    idx = i
+                assert s_count <= len_t, '统计错误'
+                if s_count == len_t and j - i + 1 < min_len:
+                    min_len = j - i + 1
+                    index = i
                 dict_s[s[i]] -= 1
                 if s[i] in dict_t:
                     if dict_s[s[i]] < dict_t[s[i]]:
-                        s_cnt -= 1
+                        s_count -= 1
                 i += 1
-        if idx != -1:
-            return s[idx : idx + min_len]
+        if index != -1:
+            return s[index: index + min_len]
         return ''
-        
+
+
+if __name__ == "__main__":
+    solve = Solution()
+    print(solve.minWindow("ADOBECODEBANC", "ABC"))
