@@ -4,33 +4,46 @@ class Solution:
         :type nums: List[int]
         :rtype: List[List[int]]
         """
+        '''
+        求包含n个数的整数数组中所有的和为0的三元组
+        题解：
+        这道题和twoSum题很像，只是严格要求了target是数组中的某一元素的相反数，
+        然后寻找其余两个互斥元素
+        由于需要首先确定一个元素，且涉及到正负数，所以排序就必不可少了
+        由于已经排序完成，之后便可以使用顺次查找
+        '''
         res = []
         if not nums:
             return res
-        ss = sorted(nums)
-        # print(ss)
+        nums.sort()
+        # print(nums)
         i = 0
-        while i < len(ss):
-            if ss[i] > 0:
+        while i < len(nums):
+            if nums[i] > 0:
                 break
-            if i > 0 and ss[i] == ss[i-1]:
+            if i > 0 and nums[i] == nums[i - 1]:
                 i += 1
                 continue
-            target = 0 - ss[i]
-            l = i+1
-            r = len(ss) - 1
+            target = 0 - nums[i]
+            l = i + 1
+            r = len(nums) - 1
             while l < r:
-                if ss[l] + ss[r] == target:
-                    res.append([ss[i], ss[l], ss[r]])
-                    while l < r and ss[l] == ss[l + 1]:
+                if nums[l] + nums[r] == target:
+                    res.append([nums[i], nums[l], nums[r]])
+                    while l < r and nums[l] == nums[l + 1]:
                         l += 1
-                    while l < r and ss[r] == ss[r - 1]:
+                    while l < r and nums[r] == nums[r - 1]:
                         r -= 1
                     l += 1
                     r -= 1
-                elif ss[l] + ss[r] < target:
+                elif nums[l] + nums[r] < target:
                     l += 1
                 else:
                     r -= 1
             i += 1
         return res
+
+
+if __name__ == "__main__":
+    solve = Solution()
+    print(solve.threeSum([-1, 0, 1, 2, -1, -4]))
