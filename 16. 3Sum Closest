@@ -5,11 +5,15 @@ class Solution:
         :type target: int
         :rtype: int
         """
+        '''
+        本题无非多记录一个差值，用以表示最近
+        '''
         if not nums:
-            return 0
+            return None
+        len_nums = len(nums)
+        if len_nums < 3:
+            return None
         nums.sort()
-        # print(nums)
-        
         closest = nums[0] + nums[1] + nums[2]
         diff = abs(closest - target)
         for idx, num in enumerate(nums):
