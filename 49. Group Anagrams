@@ -4,20 +4,22 @@ class Solution:
         :type strs: List[str]
         :rtype: List[List[str]]
         """
-        res = []
+        '''
+        本题仍然是统计特定内容的频数，只不过需要先做一次字符串排序
+        '''
         if not strs:
-            return res
+            return None
         dict_str = {}
         for strss in strs:
-            l_s = list(strss)
+            temp_str = strss[:]
+            l_s = list(temp_str.lower())
             l_s.sort()
             new_str = ''.join(l_s)
             if new_str not in dict_str:
                 dict_str[new_str] = [strss]
             else:
-                # dict_str[new_str] = dict_str[new_str] + [strss]
                 dict_str[new_str].append(strss)
-        for key in dict_str.keys():
-            res.append(dict_str[key])
+        res = []
+        for value in dict_str.values():
+            res.append(value)
         return res
-                
