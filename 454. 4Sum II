@@ -7,20 +7,24 @@ class Solution:
         :type D: List[int]
         :rtype: int
         """
-        # 因为N <= 500，所以可以使用O(n^2)复杂度解题
+        '''
+        本题是纸老虎，原本找四元组暴力解法时间复杂度理应为O(n^4)，
+        但是，题目给出N <= 500，所以可以使用O(n^2)解题。
+        这里有个小技巧，当题目给出数据集大小时，可以依据经验快速选用某些看起来高复杂度的算法
+        '''
         assert A is not None or B is not None or C is not None or D is not None
         dict_1 = {}
         for idx_c, c in enumerate(C):
             for idx_d, d in enumerate(D):
-                if -(c+d) in dict_1:
+                if -(c + d) in dict_1:
                     # dict_1[-(c+d)] = dict_1[-(c+d)].append((idx_c, idx_d))
-                    dict_1[-(c+d)] += 1
+                    dict_1[-(c + d)] += 1
                 else:
                     # dict_1[-(c+d)] = [(idx_c, idx_d)]
-                    dict_1[-(c+d)] = 1
+                    dict_1[-(c + d)] = 1
         res = 0
         for a in A:
             for b in B:
-                if a+b in dict_1:
-                    res += dict_1[a+b]
+                if a + b in dict_1:
+                    res += dict_1[a + b]
         return res
