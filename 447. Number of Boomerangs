@@ -4,28 +4,72 @@ class Solution:
         :type points: List[List[int]]
         :rtype: int
         """
-        res = 0
-        if not points:
-            return res
-        le = len(points)
-        i = 0
-        while i < le:
-            p = points[i]
-            assert p is not None
-            dict_p = {}
-            j = 0
-            while j < le:
+        '''
+        本题要求n对不同点中有多少个满足i和j之间的距离等于i和k之间的距离的元组(i, j, k)，
+        其实就是在一堆点中找满足要求（两点之间距离相等）的所有三个点构成的元组
+        怎么找呢？
+        首先确定点i，然后一个一个拿j，计算距离，然后一个一个拿k，计算距离，如果两个距离相等
+        那么找到一个满足要求的元组
+        如此，直到遍历完所有点。
+        我也不知道在想什么，感觉就是这么难，一看就觉得没有解决的方法，可是题目就是这样，
+        怎么可能有那么多一眼就知道的“高大上”的算法，一见着题就风暴八股算法，连最基本的
+        题目分析都不做，然后就懦弱的说不会做，CNM
+        有些题，一见就能知道较好的解决方法，那就写吧！
+        可是绝大多数题你脑子里是不可能有解决方法的，这就需要自己去分析，分析方法总是总结的很真的
+        1、读题目，不能精神恍惚的连字都不会认，把题目的句子读通顺，难度不小
+            有n个点（二维平面点由两个坐标表示），从点集中找满足要求的三个点一起的元组
+        2、弄清问题，究竟题目要解决的是什么
+            从n个点中，首先确定一个点i，然后另外找两个点j和k，分别计算i和j与i和k的距离，
+            如果相同，则视其为一个满足要求的三元组，题目要求找到所有满足要求的三元组
+        3、边界条件
+            点的数目n最大为500，就表明了可以使用O(n^2)的算法，因为 500^2 的计算现代计算机
+            完全没问题，但是 500^3及以上将引发计算耗时灾难，应进一步优化算法
+            点的坐标区间[-10000, 10000]，两点之间最大距离应该是点[-10000, -10000]到
+            [10000, 10000]之间的距离，也即 2 * 20000^2 这仍然在 int32 范围内
+        经过上面分析，朴实方法（暴力）怎么着也出来了，就是按照步骤写代码嘛！
+        for i in range(n):
+            p_i = points[i]
+            for j in range(n):
                 if j != i:
-                    pp = points[j]
-                    assert pp is not None
-                    dis = (p[0] - pp[0]) ** 2 + (p[1] - pp[1]) ** 2
-                    if dis in dict_p:
-                        dict_p[dis] += 1
+                    p_j = points[j]
+                    dis_ij = dis(p_i, p_j)
+                    for k in range(n):
+                        if k != i and k != j:
+                            p_k = points[k]
+                            dis_ik = dis(p_i, p_k)
+                            if dis_ij == dis_ik:
+                                res += 1
+        这显然是一个O(n^3)的解法
+        怎么优化呢？
+        首先点i在每次距离计算都得用到，所以肯定得事先固定，再者，只有先固定一个点，
+        才能较好的讨论距离变量
+        优化之处就在，在当前点i固定时，记录下已经计算出来的两点之间的距离，避免重复计算
+        显然，以距离作健，距离统计个数做值（有多少个点与点i都是当前距离），很好的符合字典数据结构
+        由于需要的是三元组，已经固定好了点i，所以至少需要对应距离的值 >= 2，
+        又，题目指出需要考虑元组顺序，所以，当前距离下的2排列就是当前距离下的总的满足
+        要求的元组个数
+        最后将所有距离下满足要求的元组个数求和便是问题的解
+        '''
+        if not points:
+            return 0
+        len_p = len(points)
+        if len_p < 3:
+            return 0
+        res = 0
+        for i in range(len_p):
+            p_i = points[i]  # 确定点 i
+            dict_dis = {}  # 当前点 i 对应的各阶距离统计
+            for jk in range(len_p):
+                if jk != i:
+                    dis_ijk = self.dis(p_i, points[jk])
+                    if dis_ijk not in dict_dis:
+                        dict_dis[dis_ijk] = 1
                     else:
-                        dict_p[dis] = 1
-                j += 1
-            for key in dict_p.keys():
-                # if dict_p[key] >= 2:
-                res += dict_p[key] * (dict_p[key] - 1)
-            i += 1
+                        dict_dis[dis_ijk] += 1
+            for v in dict_dis.values():
+                res += v * (v - 1)  # 排列
         return res
+
+    def dis(self, p_i, p_jk):
+        # 未避免浮点数，计算使用距离的平方
+        return (p_i[0] - p_jk[0]) ** 2 + (p_i[1] - p_jk[1]) ** 2
