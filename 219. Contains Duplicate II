@@ -5,24 +5,65 @@ class Solution:
         :type k: int
         :rtype: bool
         """
-        # 维护一个滑动窗口[i ... j]，使得j-i+1 <= k，并且窗口内元素不重复
-        # 探寻j+1处的元素，若该处元素与窗口中元素相等，则返回True
-        # 否则，若j-i+1 < k，j += 1；若j-i+1 == k，j += 1， i += 1
-        # 窗口内的元素使用查找表来存储(set集合底层就是哈希表实现)
-        if not nums or k == 0:
+        '''
+        给定一个整数数组和一个整数 k，判断数组中是否存在两个不同的索引 i 和 j，
+        使得 nums [i] = nums [j]，并且 i 和 j 的差的绝对值最大为 k。
+        题目分析：
+        1、读题
+            题目给出一个整数数组，要求数组中是否有相等的满足约束条件的元素。
+            约束条件：只有在固定为k的索引区间范围内找到相等的元素才满足题意
+        2、明确问题
+            遍历检查是否已知数组中有满足在固定为k的索引区间范围内相等的元素，有则返回True
+        3、暴力解法
+            就是挨个遍历检查数组元素，只要遇到相等元素，检查其是否也满足约束条件
+        核心代码：
+        for idx1, e1 in enumerate(nums):
+            for idx2, e2 in enumerate(nums):
+                if idx1 != idx2 and e1 == e2:
+                    if abs(idx2 - idx1) <= k:
+                        return True
+        return False
+        小技巧：已经遍历过的元素，无需再检查，每次检查索引区间大小最大为k
+        i = 0
+        while i < len(nums) - 1:
+            j = i + 1
+            while j < len(nums) and j - i <= k:
+                if nums[i] == nums[j]:
+                    return True
+                j += 1
+            i += 1
+        return False
+        上述代码时间复杂度均为O(n^2)
+        优化代码：
+        维护一个滑动窗口[i ... j]，使得j-i+1 <= k，并且窗口内元素不重复
+        探寻j+1处的元素，若该处元素与窗口中元素相等，则返回True
+        否则，若j-i+1 < k，j += 1；若j-i+1 == k，j += 1， i += 1
+        窗口内的元素使用查找表来存储(set集合底层就是哈希表实现)
+        '''
+        if not nums or not k:
+            return False
+        len_nums = len(nums)
+        if len_nums < 2:
             return False
         i = 0
         j = -1
         table = set()
-        while j < len(nums)-1:
-            if nums[j + 1] not in table:
+        while j < len_nums - 1:
+            if nums[j+1] not in table:
                 if j - i + 1 == k:
-                    j += 1
                     i += 1
-                    table.discard(nums[i-1])
+                    j += 1
+                    table.discard(nums[i - 1])
                 elif j - i + 1 < k:
                     j += 1
                 table.add(nums[j])
             else:
                 return True
         return False
+
+
+if __name__ == "__main__":
+    solve = Solution()
+    nums = [1, 2, 3, 1, 2, 3]
+    k = 3
+    print(solve.containsNearbyDuplicate(nums, k))
