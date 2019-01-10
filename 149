@@ -1,0 +1,113 @@
+# Definition for a point.
+import collections
+
+
+class Point:
+    def __init__(self, a=0, b=0):
+        self.x = a
+        self.y = b
+
+
+# class Solution:
+#     def maxPoints(self, points):
+#         """
+#         :type points: List[Point]
+#         :rtype: int
+#         """
+#         '''
+#         二维平面上有n个点，两点可以成一条直线，直线都有唯一的斜率
+#         也即逐一遍历n个点，计算对点的斜率，并统计该斜率出现的次数（表征当前
+#         斜率下有多少点）
+#         但是呢，斜率唯一时，可能会出现平行直线，而且当垂直直线时，斜率为无穷大
+#         再者，斜率计算值为浮点数，会引入误差
+#         同时，可能会有重复点，
+#         '''
+#         if not points:
+#             return 0
+#         len_p = len(points)
+#         if len_p < 2:
+#             return 0
+#         max_p = 2
+#         dict_slope = {}
+#         for idx, p in enumerate(points):
+#             for next_p in points[idx + 1:]:
+#                 slope_val = self.slope(p, next_p)
+#                 if slope_val not in dict_slope:
+#                     dict_slope[slope_val] = [2, [p, next_p]]
+#                 else:
+#                     if next_p not in dict_slope[slope_val][1]:
+#                         dict_slope[slope_val][0] += 1
+#                         dict_slope[slope_val][1].append(next_p)
+#                         if dict_slope[slope_val][0] > max_p:
+#                             max_p = dict_slope[slope_val][0]
+#         print(dict_slope.keys())
+#         return max_p
+#
+#     def slope(self, p, next_p):
+#         return (next_p.y - p.y) / (next_p.x - p.x)
+
+# class Solution(object):
+# #     def maxPoints(self, points):
+# #         """
+# #         :type points: List[Point]
+# #         :rtype: int
+# #         """
+# #         size = len(points)
+# #         if size < 3:
+# #             return size
+# #         ans = 0
+# #         for i in range(size):
+# #             d = {'inf': 0}
+# #             same_point = 1
+# #             for j in range(size):
+# #                 if i == j:
+# #                     continue
+# #                 elif points[i].x == points[j].x and points[i].y != points[j].y:
+# #                     d['inf'] += 1
+# #                 elif points[i].x != points[j].x:
+# #                     k = 1.0 * (points[i].y - points[j].y) / (points[i].x - points[j].x)
+# #                     if k in d:
+# #                         d[k] += 1
+# #                     else:
+# #                         d[k] = 1
+# #                 else:
+# #                     same_point += 1
+# #             ans = max(ans, max(d.values()) + same_point)
+# #         return ans
+
+
+# https://blog.csdn.net/fuxuemingzhu/article/details/83927183
+class Solution(object):
+    def maxPoints(self, points):
+        """
+        :type points: List[Point]
+        :rtype: int
+        """
+        N = len(points)
+        res = 0
+        for i in range(N):
+            lines = collections.defaultdict(int)
+            duplicates = 1
+            for j in range(i + 1, N):
+                if points[i].x == points[j].x and points[i].y == points[j].y:
+                    duplicates += 1
+                    continue
+                dx = points[i].x - points[j].x
+                dy = points[i].y - points[j].y
+                delta = self.gcd(dx, dy)
+                lines[(dx / delta, dy / delta)] += 1
+            res = max(res, (max(lines.values()) if lines else 0) + duplicates)
+        return res
+
+    def gcd(self, x, y):
+        return x if y == 0 else self.gcd(y, x % y)
+
+
+if __name__ == "__main__":
+    # list_p = [[1, 1], [2, 2], [3, 3]]
+    list_p = [[3, 2], [5, 3], [4, 1], [2, 3], [1, 4]]
+    p_list = []
+    for pp in list_p:
+        p_list.append(Point(pp[0], pp[1]))
+    solve = Solution()
+    print(solve.maxPoints(p_list))
