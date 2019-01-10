@@ -4,7 +4,32 @@ class Solution:
         :type nums: List[int]
         :rtype: bool
         """
+        '''
+        本题要求判断整数数组中是否有重复元素，有则返回True，否则返回False
+        本题相较于219号题少了固定区间范围的约束条件，因此更简单，
+        也就是，依次遍历数组，只要遇到重复元素即返回
+        '''
         if not nums:
             return False
+        len_nums = len(nums)
+        if len_nums < 2:
+            return False
+        record = set()
+        for e in nums:
+            if e in record:
+                return True
+            else:
+                record.add(e)
+        return False
+
+
+# class Solution:
+#     def containsDuplicate(self, nums):
+#         """
+#         :type nums: List[int]
+#         :rtype: bool
+#         """
+#         if not nums:
+#             return False
         
-        return len(set(nums)) != len(nums)
+#         return len(set(nums)) != len(nums)
