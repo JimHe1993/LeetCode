@@ -4,37 +4,51 @@
 #         self.val = x
 #         self.next = None
 
+
 class Solution:
     def reverseList(self, head):
         """
         :type head: ListNode
         :rtype: ListNode
         """
-        new_head = None
+        '''
+        反转一个单链表
+        链表，就是由结点组成，结点之间通过“指针”串连，其与顺序表最大的不同之处有：
+        1、顺序表在内存中是连续的存储空间，链表结点存储则是碎片化的
+        2、顺序表元素支持随机存储，单链表则只能从头结点开始访问
+        3、顺序表查找元素是O(1)，链表则在增删操作上复杂度更优
+        链表由头结点表示，为了对结点的统一处理，可以设置虚拟头节点
+        链表支持迭代遍历，更为甚者，链表天然具有递归结构
+        本题：链表反转
+        1、迭代反转
+        2、递归反转
+        '''
+        # 1、迭代反转
         if not head:
-            return new_head
-        
-        # 迭代
-        new_head = ListNode(head.val)
-        node = head
-        while node.next:
-            temp_node = ListNode(node.next.val)
-            temp_node.next = new_head
-            new_head = temp_node
-            node = node.next
-        return new_head
-        
-        # 递归
-        # new_head = self.__reverse(head)
-        # return new_head
-    
-    def __reverse(self, node):
-        if not node.next:
-            return node
-        temp_head = self.__reverse(node.next)
-        p = temp_head
-        while p.next:
-            p = p.next
-        node.next = None
-        p.next = node
-        return temp_head
+            return head
+        p = head  # 原始头结点
+        q = head.next  # 记录迭代开始的结点——原始第二结点
+        if not q:
+            return head
+        p.next = None  # 原始头结点作为反转后尾结点
+        while q:
+            w = q.next  # 记录当前迭代反转的后续结点
+            q.next = p  # 反转操作
+            p = q  # 更新头结点
+            q = w  # 更新下一轮循环结点
+        return p
+
+        # # 2、递归反转
+        # if not head:
+        #     return head  # 最后为空，递归终止
+        # p = self.reverseList(head.next)  # 一个节点一个节点的递归
+        # if not p:
+        #     return head  # 返回尾结点作为反转后头结点
+        # else:
+        #     # 将当前结点插入反转链表尾
+        #     q = p
+        #     while q.next:
+        #         q = q.next
+        #     head.next = None
+        #     q.next = head
+        #     return p
