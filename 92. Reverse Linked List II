@@ -1,3 +1,10 @@
+# Definition for singly-linked list.
+class ListNode(object):
+    def __init__(self, x):
+        self.val = x
+        self.next = None
+
+
 class Solution:
     def reverseBetween(self, head, m, n):
         """
@@ -6,6 +13,11 @@ class Solution:
         :type n: int
         :rtype: ListNode
         """
+        '''
+        反转从位置 m 到 n 的链表。请使用一趟扫描完成反转。
+        本题要求反转指定范围内的链表元素，那么首先应该记录下范围头尾的结点，以便最后
+        完成链表连接，之后在指定范围内进行反转操作
+        '''
         dummy_head = ListNode(-1)
         dummy_head.next = head
         cur = dummy_head
@@ -14,7 +26,7 @@ class Solution:
         pre = cur
         last = cur.next
         front = None
-        for _ in range(m, n+1):
+        for _ in range(m, n + 1):
             cur = pre.next
             pre.next = cur.next
             cur.next = front
@@ -23,4 +35,4 @@ class Solution:
         pre.next = front
         last.next = cur
         return dummy_head.next
-        
+
